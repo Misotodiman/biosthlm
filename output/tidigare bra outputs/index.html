@@ -1,0 +1,2052 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Bio i Stockholm 2026-02-25 till 2026-03-01</title>
+
+  <style>
+:root{--bg:#f5f5f3;--card:#fff;--line:#e6e6e3;--text:#151515;--muted:#666;--pill:#f0f0ed}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.app{max-width:1100px;margin:0 auto;padding:14px 12px 28px}
+.top{padding:8px 4px 10px}.top h1{margin:0;font-size:28px;line-height:1.05;letter-spacing:-.02em}.sub{margin:6px 0 0;color:#333}.meta{margin:6px 0 0;color:var(--muted);font-size:12px}
+.notice{background:#fff8e8;border:1px solid #eed9a6;border-radius:12px;padding:10px 12px;margin:8px 0 12px}.notice summary{cursor:pointer;font-weight:600}
+.filters{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px}
+.sticky{position:sticky;top:0;z-index:20;backdrop-filter:saturate(180%) blur(8px)}
+.filters-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;font:inherit;cursor:pointer}
+.checkbox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.check{display:flex;align-items:flex-start;gap:8px;background:var(--pill);border-radius:10px;padding:8px 10px}.check input{margin-top:2px}.check span{font-size:14px;line-height:1.2}.check.compact{background:transparent;padding:0}
+.toggles{margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.live-count{font-size:13px;color:var(--muted)}
+.days-nav{display:flex;gap:8px;overflow:auto;padding:2px 0 10px;margin-bottom:8px}
+.day-pill{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:170px;text-decoration:none}.day-pill-title{display:block;font-weight:700}.day-pill-meta{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.day-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px}
+.day-header h2{margin:0;font-size:20px;letter-spacing:-.01em}.day-header p{margin:4px 0 10px;color:var(--muted);font-size:13px}
+.table-wrap{border:1px solid var(--line);border-radius:12px;overflow:auto}table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:10px 12px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}
+th{position:sticky;top:0;background:#fafafa;font-size:12px;color:#444}
+td.time{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}td.title{font-weight:600}tr.is-hidden{display:none}.empty{color:var(--muted)}
+@media (max-width:700px){.app{padding:10px 8px 20px}.top h1{font-size:24px}.checkbox-grid{grid-template-columns:1fr 1fr}.day-pill{min-width:145px}}
+
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <h1>Bio i Stockholm</h1>
+      <p class="sub">Onsdag 25 februari till Söndag 1 mars</p>
+      <p class="meta">Uppdaterad 2026-02-25 21:26 · 206 visningar · 8 källor</p>
+    </header>
+
+    
+
+    <section class="filters sticky">
+      <div class="filters-head">
+        <strong>Biografer</strong>
+        <div class="actions">
+          <button type="button" id="btn-all">Alla</button>
+          <button type="button" id="btn-city">Innerstad</button>
+          <button type="button" id="btn-none">Ingen</button>
+        </div>
+      </div>
+      <div class="checkbox-grid" id="cinema-filters">
+        
+        <label class="check"><input type="checkbox" class="cinema-check" value="Bio Aspen" checked><span>Bio Aspen</span></label>
+        
+        <label class="check"><input type="checkbox" class="cinema-check" value="Bio Fågel Blå" checked><span>Bio Fågel Blå</span></label>
+        
+        <label class="check"><input type="checkbox" class="cinema-check" value="Bio Rio" checked><span>Bio Rio</span></label>
+        
+        <label class="check"><input type="checkbox" class="cinema-check" value="Bio Skandia" checked><span>Bio Skandia</span></label>
+        
+        <label class="check"><input type="checkbox" class="cinema-check" value="Capitol" checked><span>Capitol</span></label>
+        
+        <label class="check"><input type="checkbox" class="cinema-check" value="Cinemateket Stockholm" checked><span>Cinemateket Stockholm</span></label>
+        
+        <label class="check"><input type="checkbox" class="cinema-check" value="Tellus" checked><span>Tellus</span></label>
+        
+        <label class="check"><input type="checkbox" class="cinema-check" value="Zita" checked><span>Zita</span></label>
+        
+      </div>
+      <div class="toggles">
+        <label class="check compact"><input type="checkbox" id="only-evening"><span>Bara kväll (från 17:00)</span></label>
+        <span id="live-count" class="live-count"></span>
+      </div>
+    </section>
+
+    <section class="days-nav" aria-label="Dagar">
+      
+      <a href="#day-2026-02-25" class="day-pill"><span class="day-pill-title">Onsdag 25 februari</span><span class="day-pill-meta">23 visningar</span></a>
+      
+      <a href="#day-2026-02-26" class="day-pill"><span class="day-pill-title">Torsdag 26 februari</span><span class="day-pill-meta">40 visningar</span></a>
+      
+      <a href="#day-2026-02-27" class="day-pill"><span class="day-pill-title">Fredag 27 februari</span><span class="day-pill-meta">50 visningar</span></a>
+      
+      <a href="#day-2026-02-28" class="day-pill"><span class="day-pill-title">Lördag 28 februari</span><span class="day-pill-meta">51 visningar</span></a>
+      
+      <a href="#day-2026-03-01" class="day-pill"><span class="day-pill-title">Söndag 1 mars</span><span class="day-pill-meta">42 visningar</span></a>
+      
+    </section>
+
+    <section class="days">
+      
+      <section class="day-card" id="day-2026-02-25">
+        <header class="day-header"><h2>Onsdag 25 februari</h2><p>23 visningar · 3 biografer · 19 filmer</p></header>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Tid</th><th>Film</th><th>Biograf</th><th>Lokal</th><th>Info</th><th>Länk</th></tr></thead><tbody>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="12:00" data-minute="720">
+            <td class="time">12:00</td>
+            <td class="title">Space Cadet</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Animerad film | Inget talspråk | 2 för 1</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1200/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="12:15" data-minute="735">
+            <td class="time">12:15</td>
+            <td class="title">Flow - Katten som slutade vara rädd för vatten</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Animerat, familjefilm | Ingen dialog</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1215/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="12:30" data-minute="750">
+            <td class="time">12:30</td>
+            <td class="title">Tommy Tass får en ny vän</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Zita Barnens Bio | Animerat, Knatte | Svenska (dubbat) | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1230/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Bio Aspen" data-time="13:00" data-minute="780">
+            <td class="time">13:00</td>
+            <td class="title">Den blå färden - seniorbio</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/den-bla-farden/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="13:45" data-minute="825">
+            <td class="time">13:45</td>
+            <td class="title">ILOVERUSS</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Dokumentär | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1345/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Bio Aspen" data-time="13:45" data-minute="825">
+            <td class="time">13:45</td>
+            <td class="title">Space Cadet</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/space-cadet/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Marielle vet allt</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama, Komedi | Tyska | Svenska | Kort tid kvar!</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1400/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="14:15" data-minute="855">
+            <td class="time">14:15</td>
+            <td class="title">Hind Rajab - Rösten från Gaza</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama, Hybridfilm | Arabiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1415/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Bio Aspen" data-time="15:00" data-minute="900">
+            <td class="time">15:00</td>
+            <td class="title">Skurkarnas skurk</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/skurkarnas-skurk/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Bio Aspen" data-time="15:45" data-minute="945">
+            <td class="time">15:45</td>
+            <td class="title">Hind Rajab - rösten från Gaza</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/hind-rajab-rosten-fran-gaza/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="15:45" data-minute="945">
+            <td class="time">15:45</td>
+            <td class="title">Marty Supreme</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, Komedi | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1545/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="16:00" data-minute="960">
+            <td class="time">16:00</td>
+            <td class="title">Pillion</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1600/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="16:15" data-minute="975">
+            <td class="time">16:15</td>
+            <td class="title">Det var bara en olycka</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama, komedi | Persiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1615/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Bio Aspen" data-time="17:15" data-minute="1035">
+            <td class="time">17:15</td>
+            <td class="title">Marty Supreme</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/marty-supreme/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Bio Aspen" data-time="17:45" data-minute="1065">
+            <td class="time">17:45</td>
+            <td class="title">Sorry, Baby</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/sorry-baby/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Amrum</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Tyska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1800/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="18:15" data-minute="1095">
+            <td class="time">18:15</td>
+            <td class="title">Kattriket</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Komedi, Drama | Svenska | Sista visning!</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1815/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="18:30" data-minute="1110">
+            <td class="time">18:30</td>
+            <td class="title">The Secret Agent</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, thriller | Portugisiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/1830/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Tellus" data-time="19:30" data-minute="1170">
+            <td class="time">19:30</td>
+            <td class="title">Mother</td>
+            <td>Tellus</td>
+            <td></td>
+            <td>90 kr Mother ons 25 februari kl.19:30 | Återkommande Evenemang (Se alla) One eve</td>
+            <td><a href="https://www.nortic.se/ticket/event/78873" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Bio Aspen" data-time="20:15" data-minute="1215">
+            <td class="time">20:15</td>
+            <td class="title">Bad Lieutenant - aspen classics</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/bad-lieutenant/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="20:15" data-minute="1215">
+            <td class="time">20:15</td>
+            <td class="title">Mother</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/2015/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Zita" data-time="20:30" data-minute="1230">
+            <td class="time">20:30</td>
+            <td class="title">Daaaaaalí!</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Komedi | Franska | Svenska | Sista visning!</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260225/2030/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-25" data-cinema="Bio Aspen" data-time="20:45" data-minute="1245">
+            <td class="time">20:45</td>
+            <td class="title">Yalla Parkour</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/yalla-parkour/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+        </tbody></table></div>
+        
+      </section>
+      
+      <section class="day-card" id="day-2026-02-26">
+        <header class="day-header"><h2>Torsdag 26 februari</h2><p>40 visningar · 8 biografer · 26 filmer</p></header>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Tid</th><th>Film</th><th>Biograf</th><th>Lokal</th><th>Info</th><th>Länk</th></tr></thead><tbody>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Rio" data-time="10:00" data-minute="600">
+            <td class="time">10:00</td>
+            <td class="title">Marty Supreme</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td>Barnvagnsbio</td>
+            <td><a href="https://www.biorio.se/sv/boka/1715" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Aspen" data-time="12:00" data-minute="720">
+            <td class="time">12:00</td>
+            <td class="title">Bamse och havets hemlighet</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/bamse-och-havets-hemlighet/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="12:00" data-minute="720">
+            <td class="time">12:00</td>
+            <td class="title">Bamse och havets hemlighet</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Zita Barnens Bio | Familjefilm | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1200/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Aspen" data-time="12:15" data-minute="735">
+            <td class="time">12:15</td>
+            <td class="title">TOMMY TASS får en ny vän</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/tommy-tass-far-en-ny-van/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="12:30" data-minute="750">
+            <td class="time">12:30</td>
+            <td class="title">Lek med Alfons Åberg</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Zita Barnens Bio | Barnfilm, Knattefilm | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1230/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Aspen" data-time="13:30" data-minute="810">
+            <td class="time">13:30</td>
+            <td class="title">Skurkarnas skurk</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/skurkarnas-skurk/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="13:30" data-minute="810">
+            <td class="time">13:30</td>
+            <td class="title">The Secret Agent</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, thriller | Portugisiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1330/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="13:45" data-minute="825">
+            <td class="time">13:45</td>
+            <td class="title">Hind Rajab - Rösten från Gaza</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama, Hybridfilm | Arabiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1345/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Rio" data-time="13:45" data-minute="825">
+            <td class="time">13:45</td>
+            <td class="title">Mother</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1735" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Capitol" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Seniorbio: Ett privat liv</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Space Cadet</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Animerad film | Inget talspråk | 2 för 1</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1400/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Aspen" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Svampbob: Jakten på Fyrkant - engelskt tal</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/svampbob-jakten-pa-fyrkant/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Capitol" data-time="14:10" data-minute="850">
+            <td class="time">14:10</td>
+            <td class="title">Seniorbio: Grannfejden</td>
+            <td>Capitol</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Capitol" data-time="14:20" data-minute="860">
+            <td class="time">14:20</td>
+            <td class="title">Den svenska länken</td>
+            <td>Capitol</td>
+            <td>Salong 3</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Fågel Blå" data-time="14:30" data-minute="870">
+            <td class="time">14:30</td>
+            <td class="title">Mästaren och Margarita</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/mastaren-och-margarita/?showtime=54485" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Capitol" data-time="14:30" data-minute="870">
+            <td class="time">14:30</td>
+            <td class="title">Skurkarnas skurk</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="15:30" data-minute="930">
+            <td class="time">15:30</td>
+            <td class="title">Mother</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1530/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="16:00" data-minute="960">
+            <td class="time">16:00</td>
+            <td class="title">Amrum</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Tyska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1600/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Aspen" data-time="16:00" data-minute="960">
+            <td class="time">16:00</td>
+            <td class="title">Handbok för superhjältar</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/handbok-for-superhjaltar/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Rio" data-time="16:00" data-minute="960">
+            <td class="time">16:00</td>
+            <td class="title">The Little Sister</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1729" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="16:30" data-minute="990">
+            <td class="time">16:30</td>
+            <td class="title">Marielle vet allt</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, Komedi | Tyska | Svenska | Sista visning!</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1630/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Capitol" data-time="17:20" data-minute="1040">
+            <td class="time">17:20</td>
+            <td class="title">Amrum</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Fågel Blå" data-time="17:30" data-minute="1050">
+            <td class="time">17:30</td>
+            <td class="title">Marty Supreme</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/marty-supreme/?showtime=54479" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="17:30" data-minute="1050">
+            <td class="time">17:30</td>
+            <td class="title">Marty Supreme</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama, Komedi | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1730/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Capitol" data-time="17:30" data-minute="1050">
+            <td class="time">17:30</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Aspen" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Amrum</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/amrum/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Cinemateket Stockholm" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Bio Skandia: The Master, Paul Thomas Anderson</td>
+            <td>Cinemateket Stockholm</td>
+            <td>Bio Skandia</td>
+            <td></td>
+            <td><a href="https://www.filminstitutet.se/sv/se-och-samtala-om-film/cinemateket-stockholm/filmer/?filmId=14026&amp;cityId=1" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Skandia" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Cinemateket: The Master</td>
+            <td>Bio Skandia</td>
+            <td></td>
+            <td>Engelska | subs: Inga | 138 min</td>
+            <td><a href="https://bioskandia.se/book/?show_id=53284" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Stålsystrar - som sista dagen</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Ny finsk film | Array | Finska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1800/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="18:15" data-minute="1095">
+            <td class="time">18:15</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, Romantik | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/1815/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Rio" data-time="19:00" data-minute="1140">
+            <td class="time">19:00</td>
+            <td class="title">Tjock-Steffe Live - En ofiltrerad föreläsning</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td>Live</td>
+            <td><a href="https://www.biorio.se/sv/boka/1474" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Tellus" data-time="19:30" data-minute="1170">
+            <td class="time">19:30</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Tellus</td>
+            <td></td>
+            <td>90 kr Wuthering Heights tor 26 februari kl.19:30 | Återkommande Evenemang (Se al</td>
+            <td><a href="https://www.nortic.se/ticket/event/78874" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Capitol" data-time="19:45" data-minute="1185">
+            <td class="time">19:45</td>
+            <td class="title">Marty Supreme</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="20:15" data-minute="1215">
+            <td class="time">20:15</td>
+            <td class="title">Die My Love</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/2015/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Aspen" data-time="20:30" data-minute="1230">
+            <td class="time">20:30</td>
+            <td class="title">Hind Rajab - rösten från Gaza</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/hind-rajab-rosten-fran-gaza/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Fågel Blå" data-time="20:30" data-minute="1230">
+            <td class="time">20:30</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/wuthering-heights/?showtime=54491" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Capitol" data-time="20:35" data-minute="1235">
+            <td class="time">20:35</td>
+            <td class="title">The Housemaid</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Capitol" data-time="20:45" data-minute="1245">
+            <td class="time">20:45</td>
+            <td class="title">Pillion</td>
+            <td>Capitol</td>
+            <td>Salong 3</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Zita" data-time="20:45" data-minute="1245">
+            <td class="time">20:45</td>
+            <td class="title">Pillion</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260226/2045/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-26" data-cinema="Bio Skandia" data-time="21:00" data-minute="1260">
+            <td class="time">21:00</td>
+            <td class="title">Pillion</td>
+            <td>Bio Skandia</td>
+            <td></td>
+            <td>Engelska | subs: Svensk | 107 min</td>
+            <td><a href="https://bioskandia.se/book/?show_id=53942" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+        </tbody></table></div>
+        
+      </section>
+      
+      <section class="day-card" id="day-2026-02-27">
+        <header class="day-header"><h2>Fredag 27 februari</h2><p>50 visningar · 8 biografer · 36 filmer</p></header>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Tid</th><th>Film</th><th>Biograf</th><th>Lokal</th><th>Info</th><th>Länk</th></tr></thead><tbody>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Rio" data-time="10:40" data-minute="640">
+            <td class="time">10:40</td>
+            <td class="title">Mother</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1739" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="12:00" data-minute="720">
+            <td class="time">12:00</td>
+            <td class="title">Handbok för superhjältar</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Animerad familjefilm | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1200/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="12:00" data-minute="720">
+            <td class="time">12:00</td>
+            <td class="title">Lek med Alfons Åberg</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/lek-med-alfons-aberg/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="12:15" data-minute="735">
+            <td class="time">12:15</td>
+            <td class="title">Hopper och murmeldjurets hemlighet</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/hopper-och-murmeldjurets-hemlighet/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="12:15" data-minute="735">
+            <td class="time">12:15</td>
+            <td class="title">Space Cadet</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Animerad film | Inget talspråk | 2 för 1</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1215/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="12:30" data-minute="750">
+            <td class="time">12:30</td>
+            <td class="title">Bamse och havets hemlighet</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Zita Barnens Bio | Familjefilm | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1230/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Rio" data-time="13:00" data-minute="780">
+            <td class="time">13:00</td>
+            <td class="title">Skurkarnas skurk</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td>Family Time</td>
+            <td><a href="https://www.biorio.se/sv/boka/1737" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="13:15" data-minute="795">
+            <td class="time">13:15</td>
+            <td class="title">GOAT - bäst i världen</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/goat-bast-i-varlden/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Fågel Blå" data-time="13:15" data-minute="795">
+            <td class="time">13:15</td>
+            <td class="title">Vie privée</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/vie-privee/?showtime=54624" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="13:45" data-minute="825">
+            <td class="time">13:45</td>
+            <td class="title">Det var bara en olycka</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama, komedi | Persiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1345/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Mother</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1400/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Seniorbio: Värn</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="14:15" data-minute="855">
+            <td class="time">14:15</td>
+            <td class="title">ILOVERUSS</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Dokumentär | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1415/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="14:15" data-minute="855">
+            <td class="time">14:15</td>
+            <td class="title">Seniorbio: Doktor Glas</td>
+            <td>Capitol</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="14:15" data-minute="855">
+            <td class="time">14:15</td>
+            <td class="title">Svampbob: Jakten på Fyrkant - svenskt tal</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/svampbob-jakten-pa-fyrkant/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="14:20" data-minute="860">
+            <td class="time">14:20</td>
+            <td class="title">Grannfejden</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="14:30" data-minute="870">
+            <td class="time">14:30</td>
+            <td class="title">Amrum</td>
+            <td>Capitol</td>
+            <td>Salong 3</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Rio" data-time="15:20" data-minute="920">
+            <td class="time">15:20</td>
+            <td class="title">Sentimental Value</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1738" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Fågel Blå" data-time="15:30" data-minute="930">
+            <td class="time">15:30</td>
+            <td class="title">Amrum</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/amrum/?showtime=54488" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="15:30" data-minute="930">
+            <td class="time">15:30</td>
+            <td class="title">Skurkarnas skurk</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/skurkarnas-skurk/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="16:00" data-minute="960">
+            <td class="time">16:00</td>
+            <td class="title">Värn</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Svenska | Premiär!</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1600/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="16:15" data-minute="975">
+            <td class="time">16:15</td>
+            <td class="title">Die My Love</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1615/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="16:15" data-minute="975">
+            <td class="time">16:15</td>
+            <td class="title">ILOVERUSS</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/iloveruss/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="16:30" data-minute="990">
+            <td class="time">16:30</td>
+            <td class="title">Yalla Parkour</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Dokumentär | Arabiska | Engelska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1630/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="17:30" data-minute="1050">
+            <td class="time">17:30</td>
+            <td class="title">Grannfejden</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Fågel Blå" data-time="17:30" data-minute="1050">
+            <td class="time">17:30</td>
+            <td class="title">Hamnet</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/hamnet/?showtime=54288" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="17:40" data-minute="1060">
+            <td class="time">17:40</td>
+            <td class="title">Hamnet - Premiär 27 feb</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="17:45" data-minute="1065">
+            <td class="time">17:45</td>
+            <td class="title">Pillion</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/pillion/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="17:50" data-minute="1070">
+            <td class="time">17:50</td>
+            <td class="title">EPiC: Elvis Presley in Concert - Premiär 27 feb</td>
+            <td>Capitol</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="17:50" data-minute="1070">
+            <td class="time">17:50</td>
+            <td class="title">Ett privat liv</td>
+            <td>Capitol</td>
+            <td>Salong 3</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Rio" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">EPiC: Elvis Presley in Concert</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1538" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Hamnet</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Engelska | Svenska | Premiär!</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1800/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Skandia" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">LIDO SCREENINGS: Heat (1995, 35mm) &amp;#8211; Med Tarik Saleh</td>
+            <td>Bio Skandia</td>
+            <td></td>
+            <td>Engelska | subs: Svensk | 170 min</td>
+            <td><a href="https://bioskandia.se/book/?show_id=53515" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Cinemateket Stockholm" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Orkanen 70 mm, Jan Troell</td>
+            <td>Cinemateket Stockholm</td>
+            <td>Filmhuset - Bio Victor</td>
+            <td>70 mm</td>
+            <td><a href="https://www.filminstitutet.se/sv/se-och-samtala-om-film/cinemateket-stockholm/filmer/?filmId=2401&amp;cityId=1" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="18:15" data-minute="1095">
+            <td class="time">18:15</td>
+            <td class="title">Hind Rajab - Rösten från Gaza</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, Hybridfilm | Arabiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1815/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="18:15" data-minute="1095">
+            <td class="time">18:15</td>
+            <td class="title">Sentimental Value</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/sentimental-value/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="18:30" data-minute="1110">
+            <td class="time">18:30</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama, Romantik | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/1830/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Tellus" data-time="19:00" data-minute="1140">
+            <td class="time">19:00</td>
+            <td class="title">Förstadens filmsalong: Doktor Mabuses testamente</td>
+            <td>Tellus</td>
+            <td></td>
+            <td>90 kr Förstadens filmsalong: Doktor Mabuses testamente fre 27 februari kl.19:00 </td>
+            <td><a href="https://www.nortic.se/ticket/event/78981" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Rio" data-time="20:10" data-minute="1210">
+            <td class="time">20:10</td>
+            <td class="title">Hamnet</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1640" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Fågel Blå" data-time="20:15" data-minute="1215">
+            <td class="time">20:15</td>
+            <td class="title">Marty Supreme</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/marty-supreme/?showtime=54478" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="20:15" data-minute="1215">
+            <td class="time">20:15</td>
+            <td class="title">Marty Supreme</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="20:15" data-minute="1215">
+            <td class="time">20:15</td>
+            <td class="title">Marty Supreme</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, Komedi | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/2015/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="20:15" data-minute="1215">
+            <td class="time">20:15</td>
+            <td class="title">Vi var The Ark</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/vi-var-the-ark/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="20:20" data-minute="1220">
+            <td class="time">20:20</td>
+            <td class="title">Is This Thing On? - Premiär 27 feb</td>
+            <td>Capitol</td>
+            <td>Salong 3</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="20:30" data-minute="1230">
+            <td class="time">20:30</td>
+            <td class="title">Amrum</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Tyska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/2030/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="20:30" data-minute="1230">
+            <td class="time">20:30</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Capitol</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Capitol" data-time="20:40" data-minute="1240">
+            <td class="time">20:40</td>
+            <td class="title">The Housemaid</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Aspen" data-time="20:45" data-minute="1245">
+            <td class="time">20:45</td>
+            <td class="title">Die My Love</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/die-my-love/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Zita" data-time="21:00" data-minute="1260">
+            <td class="time">21:00</td>
+            <td class="title">Pillion</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260227/2100/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-27" data-cinema="Bio Skandia" data-time="21:40" data-minute="1300">
+            <td class="time">21:40</td>
+            <td class="title">Secret Cinema 27 februari</td>
+            <td>Bio Skandia</td>
+            <td></td>
+            <td>Engelska | subs: Svensk | 135 min</td>
+            <td><a href="https://bioskandia.se/book/?show_id=53654" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+        </tbody></table></div>
+        
+      </section>
+      
+      <section class="day-card" id="day-2026-02-28">
+        <header class="day-header"><h2>Lördag 28 februari</h2><p>51 visningar · 7 biografer · 37 filmer</p></header>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Tid</th><th>Film</th><th>Biograf</th><th>Lokal</th><th>Info</th><th>Länk</th></tr></thead><tbody>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Fågel Blå" data-time="10:30" data-minute="630">
+            <td class="time">10:30</td>
+            <td class="title">Breakfast at Tiffany’s</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/breakfast-at-tiffanys/?showtime=53650" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Tellus" data-time="10:30" data-minute="630">
+            <td class="time">10:30</td>
+            <td class="title">Frukostbio: Grannfejden</td>
+            <td>Tellus</td>
+            <td></td>
+            <td>90 kr – 165 kr Frukostbio: Grannfejden lör 28 februari kl.10:30 Äntligen är det </td>
+            <td><a href="https://www.nortic.se/ticket/event/79016" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Rio" data-time="10:30" data-minute="630">
+            <td class="time">10:30</td>
+            <td class="title">Hamnet</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td>Frukostbio</td>
+            <td><a href="https://www.biorio.se/sv/boka/1642" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="11:00" data-minute="660">
+            <td class="time">11:00</td>
+            <td class="title">Lek med Alfons Åberg</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="11:15" data-minute="675">
+            <td class="time">11:15</td>
+            <td class="title">Goat - bäst i världen</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="11:35" data-minute="695">
+            <td class="time">11:35</td>
+            <td class="title">Den svenska länken</td>
+            <td>Capitol</td>
+            <td>Salong 3</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="11:40" data-minute="700">
+            <td class="time">11:40</td>
+            <td class="title">Skurkarnas skurk</td>
+            <td>Capitol</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="11:45" data-minute="705">
+            <td class="time">11:45</td>
+            <td class="title">Bamse och havets hemlighet</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Zita Barnens Bio | Familjefilm | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1145/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="12:00" data-minute="720">
+            <td class="time">12:00</td>
+            <td class="title">Space Cadet</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Animerad film | Inget talspråk | 2 för 1</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1200/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="12:30" data-minute="750">
+            <td class="time">12:30</td>
+            <td class="title">Lek med Alfons Åberg</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Zita Barnens Bio | Barnfilm, Knattefilm | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1230/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Fågel Blå" data-time="13:00" data-minute="780">
+            <td class="time">13:00</td>
+            <td class="title">Amrum</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/amrum/?showtime=54495" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Rio" data-time="13:10" data-minute="790">
+            <td class="time">13:10</td>
+            <td class="title">Is This Thing On?</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td>Bakisbio</td>
+            <td><a href="https://www.biorio.se/sv/boka/1671" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="13:15" data-minute="795">
+            <td class="time">13:15</td>
+            <td class="title">Värn</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1315/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="13:50" data-minute="830">
+            <td class="time">13:50</td>
+            <td class="title">Marty Supreme</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Afternoon Tea: Hamnet</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Cinemateket Stockholm" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Legenden om Surams fästning, Sergej Paradjanov</td>
+            <td>Cinemateket Stockholm</td>
+            <td>Filmhuset - Bio Victor</td>
+            <td></td>
+            <td><a href="https://www.filminstitutet.se/sv/se-och-samtala-om-film/cinemateket-stockholm/filmer/?filmId=3044&amp;cityId=1" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Stålsystrar - som sista dagen</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Ny finsk film | Array | Finska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1400/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="14:15" data-minute="855">
+            <td class="time">14:15</td>
+            <td class="title">Grannfejden</td>
+            <td>Capitol</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="14:15" data-minute="855">
+            <td class="time">14:15</td>
+            <td class="title">ILOVERUSS</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Dokumentär | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1415/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="14:20" data-minute="860">
+            <td class="time">14:20</td>
+            <td class="title">EPiC: Elvis Presley in Concert - Premiär 27 feb</td>
+            <td>Capitol</td>
+            <td>Salong 3</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Fågel Blå" data-time="15:00" data-minute="900">
+            <td class="time">15:00</td>
+            <td class="title">Marty Supreme</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/marty-supreme/?showtime=54496" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="15:00" data-minute="900">
+            <td class="time">15:00</td>
+            <td class="title">The Secret Agent</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, thriller | Portugisiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1500/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Rio" data-time="15:40" data-minute="940">
+            <td class="time">15:40</td>
+            <td class="title">Doktor Glas</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1722" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Cinemateket Stockholm" data-time="16:00" data-minute="960">
+            <td class="time">16:00</td>
+            <td class="title">Orlacs händer, Robert Wiene</td>
+            <td>Cinemateket Stockholm</td>
+            <td>Filmhuset - Bio Victor</td>
+            <td></td>
+            <td><a href="https://www.filminstitutet.se/sv/se-och-samtala-om-film/cinemateket-stockholm/filmer/?filmId=3993&amp;cityId=1" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Aspen" data-time="16:00" data-minute="960">
+            <td class="time">16:00</td>
+            <td class="title">VÄRN</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/varn/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="16:15" data-minute="975">
+            <td class="time">16:15</td>
+            <td class="title">Hind Rajab - Rösten från Gaza</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama, Hybridfilm | Arabiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1615/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Aspen" data-time="16:30" data-minute="990">
+            <td class="time">16:30</td>
+            <td class="title">Hind Rajab - rösten från Gaza</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/hind-rajab-rosten-fran-gaza/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="16:30" data-minute="990">
+            <td class="time">16:30</td>
+            <td class="title">Yalla Parkour</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Dokumentär | Arabiska | Engelska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1630/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="17:00" data-minute="1020">
+            <td class="time">17:00</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Capitol</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="17:20" data-minute="1040">
+            <td class="time">17:20</td>
+            <td class="title">Hamnet - Premiär 27 feb</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="17:30" data-minute="1050">
+            <td class="time">17:30</td>
+            <td class="title">Ett privat liv</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="17:35" data-minute="1055">
+            <td class="time">17:35</td>
+            <td class="title">Doktor Glas - Premiär 27 feb</td>
+            <td>Capitol</td>
+            <td>Salong 3</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Amrum</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Tyska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1800/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Aspen" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Hamnet</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/hamnet/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Fågel Blå" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Hamnet</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/hamnet/?showtime=54290" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Rio" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Hamnet</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1641" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Cinemateket Stockholm" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Så vit som en snö, Jan Troell</td>
+            <td>Cinemateket Stockholm</td>
+            <td>Filmhuset - Bio Victor</td>
+            <td></td>
+            <td><a href="https://www.filminstitutet.se/sv/se-och-samtala-om-film/cinemateket-stockholm/filmer/?filmId=14017&amp;cityId=1" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="18:15" data-minute="1095">
+            <td class="time">18:15</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, Romantik | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1815/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Aspen" data-time="18:15" data-minute="1095">
+            <td class="time">18:15</td>
+            <td class="title">Yalla Parkour</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/yalla-parkour/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="18:30" data-minute="1110">
+            <td class="time">18:30</td>
+            <td class="title">Die My Love</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/1830/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="20:00" data-minute="1200">
+            <td class="time">20:00</td>
+            <td class="title">Hamnet</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/2000/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Aspen" data-time="20:00" data-minute="1200">
+            <td class="time">20:00</td>
+            <td class="title">No Other Choice</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/no-other-choice/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="20:05" data-minute="1205">
+            <td class="time">20:05</td>
+            <td class="title">Vi var The Ark - Premiär 27 feb</td>
+            <td>Capitol</td>
+            <td>Salong 4</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="20:10" data-minute="1210">
+            <td class="time">20:10</td>
+            <td class="title">Sentimental Value</td>
+            <td>Capitol</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="20:20" data-minute="1220">
+            <td class="time">20:20</td>
+            <td class="title">Is This Thing On? - Premiär 27 feb</td>
+            <td>Capitol</td>
+            <td>Salong 3</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Capitol" data-time="20:30" data-minute="1230">
+            <td class="time">20:30</td>
+            <td class="title">The Housemaid</td>
+            <td>Capitol</td>
+            <td>Salong 2</td>
+            <td></td>
+            <td></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Aspen" data-time="20:30" data-minute="1230">
+            <td class="time">20:30</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/wuthering-heights/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Rio" data-time="20:35" data-minute="1235">
+            <td class="time">20:35</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1734" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Bio Fågel Blå" data-time="20:40" data-minute="1240">
+            <td class="time">20:40</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/wuthering-heights/?showtime=54494" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="20:45" data-minute="1245">
+            <td class="time">20:45</td>
+            <td class="title">Mother</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/2045/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-02-28" data-cinema="Zita" data-time="21:00" data-minute="1260">
+            <td class="time">21:00</td>
+            <td class="title">Pillion</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260228/2100/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+        </tbody></table></div>
+        
+      </section>
+      
+      <section class="day-card" id="day-2026-03-01">
+        <header class="day-header"><h2>Söndag 1 mars</h2><p>42 visningar · 7 biografer · 31 filmer</p></header>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Tid</th><th>Film</th><th>Biograf</th><th>Lokal</th><th>Info</th><th>Länk</th></tr></thead><tbody>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Aspen" data-time="10:00" data-minute="600">
+            <td class="time">10:00</td>
+            <td class="title">2046 - frukostbio</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/2046/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Rio" data-time="10:15" data-minute="615">
+            <td class="time">10:15</td>
+            <td class="title">Sagan om ringen (1978)</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td>Frukostbio</td>
+            <td><a href="https://www.biorio.se/sv/boka/1639" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Fågel Blå" data-time="10:30" data-minute="630">
+            <td class="time">10:30</td>
+            <td class="title">Marty Supreme</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/marty-supreme/?showtime=54499" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Aspen" data-time="10:30" data-minute="630">
+            <td class="time">10:30</td>
+            <td class="title">TOMMY TASS får en ny vän</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/tommy-tass-far-en-ny-van/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="12:00" data-minute="720">
+            <td class="time">12:00</td>
+            <td class="title">Bamse och havets hemlighet</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Zita Barnens Bio | Familjefilm | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1200/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Aspen" data-time="12:00" data-minute="720">
+            <td class="time">12:00</td>
+            <td class="title">GOAT - bäst i världen</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/goat-bast-i-varlden/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="12:15" data-minute="735">
+            <td class="time">12:15</td>
+            <td class="title">Space Cadet</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Animerad film | Inget talspråk | 2 för 1</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1215/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="12:30" data-minute="750">
+            <td class="time">12:30</td>
+            <td class="title">Tommy Tass får en ny vän</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Zita Barnens Bio | Animerat, Knatte | Svenska (dubbat) | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1230/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Aspen" data-time="12:45" data-minute="765">
+            <td class="time">12:45</td>
+            <td class="title">Operation bäver - smygpremiär!</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/operation-baver/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Rio" data-time="12:55" data-minute="775">
+            <td class="time">12:55</td>
+            <td class="title">Bamse och havets hemlighet</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td>Family Time</td>
+            <td><a href="https://www.biorio.se/sv/boka/1733" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="13:45" data-minute="825">
+            <td class="time">13:45</td>
+            <td class="title">Mother</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1345/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Skandia" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Casablanca</td>
+            <td>Bio Skandia</td>
+            <td></td>
+            <td>Engelska | subs: Svensk | 102 min</td>
+            <td><a href="https://bioskandia.se/book/?show_id=54416" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Stålsystrar - som sista dagen</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Ny finsk film | Array | Finska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1400/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Cinemateket Stockholm" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Unga Cinemateket: Mälarpirater, Gustaf Molander</td>
+            <td>Cinemateket Stockholm</td>
+            <td>Filmhuset - Bio Victor</td>
+            <td></td>
+            <td><a href="https://www.filminstitutet.se/sv/se-och-samtala-om-film/cinemateket-stockholm/filmer/?filmId=3659&amp;cityId=1" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Fågel Blå" data-time="14:00" data-minute="840">
+            <td class="time">14:00</td>
+            <td class="title">Vie privée</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/vie-privee/?showtime=54748" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="14:15" data-minute="855">
+            <td class="time">14:15</td>
+            <td class="title">ILOVERUSS</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Dokumentär | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1415/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Rio" data-time="14:30" data-minute="870">
+            <td class="time">14:30</td>
+            <td class="title">Amadeus</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1556" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Aspen" data-time="15:00" data-minute="900">
+            <td class="time">15:00</td>
+            <td class="title">Skurkarnas skurk</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/skurkarnas-skurk/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Tellus" data-time="15:00" data-minute="900">
+            <td class="time">15:00</td>
+            <td class="title">Space Cadet</td>
+            <td>Tellus</td>
+            <td></td>
+            <td>60 kr Space Cadet sön 1 mars kl.15:00 När astronauten Celeste förbereder sig för</td>
+            <td><a href="https://www.nortic.se/ticket/event/79210" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Cinemateket Stockholm" data-time="16:00" data-minute="960">
+            <td class="time">16:00</td>
+            <td class="title">Bang!, Jan Troell</td>
+            <td>Cinemateket Stockholm</td>
+            <td>Filmhuset - Bio Victor</td>
+            <td></td>
+            <td><a href="https://www.filminstitutet.se/sv/se-och-samtala-om-film/cinemateket-stockholm/filmer/?filmId=12928&amp;cityId=1" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="16:00" data-minute="960">
+            <td class="time">16:00</td>
+            <td class="title">Yalla Parkour</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Dokumentär | Arabiska | Engelska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1600/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Fågel Blå" data-time="16:10" data-minute="970">
+            <td class="time">16:10</td>
+            <td class="title">Hamnet</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/hamnet/?showtime=54502" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="16:15" data-minute="975">
+            <td class="time">16:15</td>
+            <td class="title">Hind Rajab - Rösten från Gaza</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, Hybridfilm | Arabiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1615/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="16:30" data-minute="990">
+            <td class="time">16:30</td>
+            <td class="title">Värn</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1630/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Aspen" data-time="16:45" data-minute="1005">
+            <td class="time">16:45</td>
+            <td class="title">Amrum</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/amrum/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Tellus" data-time="17:00" data-minute="1020">
+            <td class="time">17:00</td>
+            <td class="title">EPiC: Elvis Presley in Concert</td>
+            <td>Tellus</td>
+            <td></td>
+            <td>kr EPiC: Elvis Presley in Concert sön 1 mars kl.17:00 | Återkommande Evenemang (</td>
+            <td><a href="https://www.nortic.se/ticket/event/79211" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Skandia" data-time="17:00" data-minute="1020">
+            <td class="time">17:00</td>
+            <td class="title">Hamnet</td>
+            <td>Bio Skandia</td>
+            <td></td>
+            <td>Engelska | subs: Svensk | 126 min</td>
+            <td><a href="https://bioskandia.se/book/?show_id=54417" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Aspen" data-time="17:15" data-minute="1035">
+            <td class="time">17:15</td>
+            <td class="title">Pillion</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/pillion/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Rio" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Paprika</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1747" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">The Secret Agent</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama, thriller | Portugisiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1800/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Cinemateket Stockholm" data-time="18:00" data-minute="1080">
+            <td class="time">18:00</td>
+            <td class="title">Torso, Sergio Martino</td>
+            <td>Cinemateket Stockholm</td>
+            <td>Filmhuset - Bio Victor</td>
+            <td></td>
+            <td><a href="https://www.filminstitutet.se/sv/se-och-samtala-om-film/cinemateket-stockholm/filmer/?filmId=13995&amp;cityId=1" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="18:15" data-minute="1095">
+            <td class="time">18:15</td>
+            <td class="title">Amrum</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Tyska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1815/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="18:30" data-minute="1110">
+            <td class="time">18:30</td>
+            <td class="title">Det var bara en olycka</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama, komedi | Persiska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/1830/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Fågel Blå" data-time="18:50" data-minute="1130">
+            <td class="time">18:50</td>
+            <td class="title">Mästaren och Margarita</td>
+            <td>Bio Fågel Blå</td>
+            <td>Bio Fågel Blå</td>
+            <td></td>
+            <td><a href="https://biofagelbla.se/movie/mastaren-och-margarita/?showtime=54489" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Aspen" data-time="19:00" data-minute="1140">
+            <td class="time">19:00</td>
+            <td class="title">The Secret Agent</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/the-secret-agent/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Tellus" data-time="19:30" data-minute="1170">
+            <td class="time">19:30</td>
+            <td class="title">Amrum</td>
+            <td>Tellus</td>
+            <td></td>
+            <td>90 kr Amrum sön 1 mars kl.19:30 | Återkommande Evenemang (Se alla) One event on </td>
+            <td><a href="https://www.nortic.se/ticket/event/79213" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Aspen" data-time="19:30" data-minute="1170">
+            <td class="time">19:30</td>
+            <td class="title">Marty Supreme</td>
+            <td>Bio Aspen</td>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.bioaspen.se/movies/marty-supreme/" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Rio" data-time="20:00" data-minute="1200">
+            <td class="time">20:00</td>
+            <td class="title">Hamnet</td>
+            <td>Bio Rio</td>
+            <td>Salong 1</td>
+            <td></td>
+            <td><a href="https://www.biorio.se/sv/boka/1752" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="20:15" data-minute="1215">
+            <td class="time">20:15</td>
+            <td class="title">Hamnet</td>
+            <td>Zita</td>
+            <td>Salong 1</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/2015/Salong%201" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Bio Skandia" data-time="20:30" data-minute="1230">
+            <td class="time">20:30</td>
+            <td class="title">Is This Thing On?</td>
+            <td>Bio Skandia</td>
+            <td></td>
+            <td>Engelska | subs: Svensk | 120 min</td>
+            <td><a href="https://bioskandia.se/book/?show_id=54418" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="20:45" data-minute="1245">
+            <td class="time">20:45</td>
+            <td class="title">Wuthering Heights</td>
+            <td>Zita</td>
+            <td>Salong 3</td>
+            <td>Drama, Romantik | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/2045/Salong%203" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+          <tr class="show-row" data-date="2026-03-01" data-cinema="Zita" data-time="21:00" data-minute="1260">
+            <td class="time">21:00</td>
+            <td class="title">Pillion</td>
+            <td>Zita</td>
+            <td>Salong 2</td>
+            <td>Drama | Engelska | Svenska</td>
+            <td><a href="https://bio.se/biografer/zita-folkets-bio/20260301/2100/Salong%202" target="_blank" rel="noopener noreferrer">Öppna</a></td>
+          </tr>
+        
+        </tbody></table></div>
+        
+      </section>
+      
+    </section>
+  </main>
+
+  <script>
+(function(){
+  const checks = Array.from(document.querySelectorAll('.cinema-check'));
+  const rows = Array.from(document.querySelectorAll('.show-row'));
+  const eveningToggle = document.getElementById('only-evening');
+  const liveCount = document.getElementById('live-count');
+  const btnAll = document.getElementById('btn-all');
+  const btnNone = document.getElementById('btn-none');
+  const btnCity = document.getElementById('btn-city');
+  const suburbanDefaults = new Set(['Filmstaden Täby','Grand Lidingö','Filmstaden Sickla','Filmstaden Scandinavia','Filmstaden Heron City','Filmstaden Vällingby','Filmstaden Kista']);
+  function selectedCinemas(){ return new Set(checks.filter(c=>c.checked).map(c=>c.value)); }
+  function applyFilters(){
+    const selected = selectedCinemas();
+    const onlyEvening = !!(eveningToggle && eveningToggle.checked);
+    let visible = 0;
+    rows.forEach(row=>{
+      const cinema = row.dataset.cinema || '';
+      const minute = parseInt(row.dataset.minute || '0', 10);
+      let show = selected.has(cinema);
+      if(show && onlyEvening && minute < 17*60) show = false;
+      row.classList.toggle('is-hidden', !show);
+      if(show) visible++;
+    });
+    if(liveCount) liveCount.textContent = `${visible} visningar visas`;
+    document.querySelectorAll('.day-card').forEach(card=>{
+      const bodyRows = Array.from(card.querySelectorAll('tbody .show-row'));
+      const visibleRows = bodyRows.filter(r=>!r.classList.contains('is-hidden'));
+      const tableWrap = card.querySelector('.table-wrap');
+      let empty = card.querySelector('.js-filter-empty');
+      if(!empty){
+        empty = document.createElement('p');
+        empty.className = 'empty js-filter-empty';
+        empty.textContent = 'Inga visningar matchar filtren.';
+        empty.style.display = 'none';
+        card.appendChild(empty);
+      }
+      if(tableWrap) tableWrap.style.display = visibleRows.length ? '' : 'none';
+      empty.style.display = visibleRows.length ? 'none' : '';
+    });
+  }
+  checks.forEach(c=>c.addEventListener('change', applyFilters));
+  if(eveningToggle) eveningToggle.addEventListener('change', applyFilters);
+  if(btnAll) btnAll.addEventListener('click', ()=>{ checks.forEach(c=>c.checked=true); applyFilters(); });
+  if(btnNone) btnNone.addEventListener('click', ()=>{ checks.forEach(c=>c.checked=false); applyFilters(); });
+  if(btnCity) btnCity.addEventListener('click', ()=>{ checks.forEach(c=>c.checked=!suburbanDefaults.has(c.value)); applyFilters(); });
+  applyFilters();
+})();
+
+  </script>
+</body>
+</html>

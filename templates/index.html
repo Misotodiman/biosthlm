@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e0c0b">
+<title>{{ page_title }}</title>
+<style>
+{% if curtain_b64 %}
+.hero-bg{background-image:url("data:image/jpeg;base64,{{ curtain_b64 }}")}
+{% endif %}
+{{ inline_css | safe }}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">På bio i Stockholm</h1>
+    <p class="hero-meta">Uppdaterad {{ generated_at }} · {{ total_count }} visningar · {{ source_count }} biografer</p>
+  </div>
+</div>
+
+<div class="main-content">
+
+  <div id="errors-container"></div>
+
+  <!-- BIOGRAFER -->
+  <section class="panel" id="panel-cinemas">
+    <button class="panel-header" id="toggle-cinemas">
+      <span class="panel-title">Biografer</span>
+      <span class="panel-meta" id="cinema-meta"></span>
+      <span class="panel-chevron">&#9660;</span>
+    </button>
+    <div class="panel-body" id="body-cinemas">
+      <div class="quick-actions" id="cinema-quick"></div>
+      <div class="cinema-grid" id="cinema-grid"></div>
+    </div>
+  </section>
+
+  <!-- FILMER -->
+  <section class="panel" id="panel-films">
+    <button class="panel-header" id="toggle-films">
+      <span class="panel-title">Filmer</span>
+      <span class="panel-meta" id="film-meta"></span>
+      <span class="panel-chevron">&#9660;</span>
+    </button>
+    <div class="panel-body" id="body-films">
+      <div class="quick-actions" id="film-quick"></div>
+      <div class="search-box">
+        <span class="search-icon">&#128269;</span>
+        <input type="search" class="search-input" placeholder="Sök film…" id="film-search" autocomplete="off">
+      </div>
+      <div class="film-grid" id="film-grid"></div>
+    </div>
+  </section>
+
+  <!-- DAGAR -->
+  <section class="filter-row">
+    <div class="filter-label">Dag</div>
+    <div class="day-strip" id="day-strip"></div>
+  </section>
+
+  <!-- TID -->
+  <section class="filter-row">
+    <div class="filter-label">Tid <span class="time-label" id="time-label">06:00 – 24:00</span></div>
+    <div class="range-slider" id="range-slider">
+      <div class="range-track"></div>
+      <div class="range-fill" id="range-fill"></div>
+      <input type="range" class="range-thumb range-thumb-min" id="time-min" min="360" max="1440" value="360" step="30">
+      <input type="range" class="range-thumb range-thumb-max" id="time-max" min="360" max="1440" value="1440" step="30">
+    </div>
+  </section>
+
+  <!-- RESULTAT -->
+  <section class="results-section">
+    <div class="results-header">
+      <span class="results-title" id="results-title">Visningar</span>
+      <span class="results-count" id="results-count"></span>
+    </div>
+    <div id="results-list"></div>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">
+      <svg class="tmdb-logo" viewBox="0 0 190 28" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tmdb-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#90CEA1"/><stop offset="50%" stop-color="#3CBEC9"/><stop offset="100%" stop-color="#00B3E5"/></linearGradient></defs>
+        <circle cx="14" cy="14" r="12" fill="none" stroke="url(#tmdb-g)" stroke-width="2"/>
+        <text x="34" y="20" fill="currentColor" font-family="inherit" font-size="16" font-weight="700" letter-spacing="1">TMDB</text>
+      </svg>
+    </a>
+    <p>This product uses the <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB API</a> but is not endorsed or certified by TMDB.</p>
+  </div>
+</footer>
+
+<script>
+const SHOWS = {{ shows_json | safe }};
+const DATES = {{ dates_json | safe }};
+const ERRORS = {{ errors_json | safe }};
+const POSTERS = {{ posters_json | safe }};
+const RUNTIMES = {{ runtimes_json | safe }};
+{{ inline_js | safe }}
+</script>
+</body>
+</html>
