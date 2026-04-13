@@ -290,6 +290,7 @@ _FMT_KEEP_PATTERNS = (
     "seniorbio", "skolvisning", "skolbio",
     "regissörsbesök", "skådespelarbesök", "premiär",
     "autismvänlig", "afternoon tea", "unga cinemateket",
+    "dine-in", "familjematiné",
 )
 
 

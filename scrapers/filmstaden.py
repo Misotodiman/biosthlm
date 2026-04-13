@@ -8,8 +8,16 @@ import requests
 SHOW_URL = "https://services.cinema-api.com/show/stripped/sv/1/1024?filter.countryAlias=se&filter.cityAlias=SE&filter.channel=App"
 MOVIE_URL = "https://services.cinema-api.com/movie/sv"
 MOBILE_BASE = "https://mobile.filmstaden.se/biljetter/se/"
+FILMSTADEN_FILM_BASE = "https://www.filmstaden.se/film/"
 
 STOCKHOLM_TZ = ZoneInfo("Europe/Stockholm")
+
+
+def _build_film_url(slug: str | None) -> str:
+    """Bygg URL till filmens sida på filmstaden.se där alla visningar listas."""
+    if slug and isinstance(slug, str):
+        return f"{FILMSTADEN_FILM_BASE}{slug}/"
+    return MOBILE_BASE
 
 
 def _session() -> requests.Session:
@@ -258,12 +266,20 @@ def fetch_filmstaden_stockholm_stub(target_date: str, timeout: int = 20):
         title = _title_for_show(sh, movie_map)
         start_time = item["start_time"]
 
+        # Hitta filmens slug så vi kan länka till rätt filmsida
+        slug = None
+        mv_id = sh.get("mvId")
+        if isinstance(mv_id, str):
+            meta = movie_map.get(mv_id)
+            if isinstance(meta, dict):
+                slug = meta.get("slug")
+
         row = {
             "title": title,
             "cinema": str(cinema),
             "start_time": start_time,
             "date": item["date"],
-            "booking_url": MOBILE_BASE,
+            "booking_url": _build_film_url(slug),
             "format_info": _format_info_for_show(sh, movie_map),
             "district": None,
             "venue": str(sh.get("st")) if sh.get("st") else None,

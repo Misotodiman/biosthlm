@@ -9,6 +9,12 @@
     "Victoria Stockholm", "Zita"
   ]);
 
+  // ── CINEVILLE ──
+  var CINEVILLE = new Set([
+    "Bio Aspen", "Bio Bristol", "Tellus", "Reflexen", "Bio Skandia",
+    "Folkets Hus Kallhäll", "Klarabiografen", "Skärisbiografen", "Zita"
+  ]);
+
   // ── SWEDISH LABELS ──
   var SV_DAYS = ["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"];
   var SV_DAYS_LONG = ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"];
@@ -125,6 +131,7 @@
   function renderCinemas() {
     var allCinemas = getAllCinemas();
     var inner = allCinemas.filter(function (c) { return INNERSTAD.has(c); });
+    var cineville = allCinemas.filter(function (c) { return CINEVILLE.has(c); });
     var outer = allCinemas.filter(function (c) { return !INNERSTAD.has(c); });
     var ordered = inner.concat(outer);
 
@@ -132,11 +139,15 @@
     var qa = document.getElementById("cinema-quick");
     qa.innerHTML =
       '<button class="quick-btn" id="btn-c-inner">Innerstad</button>' +
+      '<button class="quick-btn" id="btn-c-cineville">Cineville</button>' +
       '<button class="quick-btn" id="btn-c-all">Alla</button>' +
       '<button class="quick-btn" id="btn-c-none">Rensa</button>';
 
     document.getElementById("btn-c-inner").addEventListener("click", function () {
       selectedCinemas = new Set(inner); saveCinemas(); renderCinemas(); renderResults();
+    });
+    document.getElementById("btn-c-cineville").addEventListener("click", function () {
+      selectedCinemas = new Set(cineville); saveCinemas(); renderCinemas(); renderResults();
     });
     document.getElementById("btn-c-all").addEventListener("click", function () {
       selectedCinemas = new Set(allCinemas); saveCinemas(); renderCinemas(); renderResults();

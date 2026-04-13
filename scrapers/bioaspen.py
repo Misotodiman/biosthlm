@@ -3,126 +3,83 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from datetime import date, datetime, time
+from datetime import date, datetime
 from typing import Iterable, Optional
 from zoneinfo import ZoneInfo
 
-import requests
 from bs4 import BeautifulSoup, Tag
+
+from .common import get_html
 
 
 STOCKHOLM_TZ = ZoneInfo("Europe/Stockholm")
 
 BASE_URL = "https://www.bioaspen.se/visningar/filmer/"
 BASE_HOST = "https://www.bioaspen.se"
-USER_AGENT = "bioschema/1.0 (+https://example.com) python-requests"
 
-# Svenska månader som Aspen typiskt använder i rubriker.
 _MONTHS = {
-    "januari": 1,
-    "februari": 2,
-    "mars": 3,
-    "april": 4,
-    "maj": 5,
-    "juni": 6,
-    "juli": 7,
-    "augusti": 8,
-    "september": 9,
-    "oktober": 10,
-    "november": 11,
-    "december": 12,
+    "januari": 1, "februari": 2, "mars": 3, "april": 4, "maj": 5, "juni": 6,
+    "juli": 7, "augusti": 8, "september": 9, "oktober": 10, "november": 11, "december": 12,
 }
 
-# Ex: "onsdag, 25 februari"
+# "onsdag, 25 februari"
 _DATE_HEADING_RE = re.compile(
     r"^\s*(måndag|tisdag|onsdag|torsdag|fredag|lördag|söndag)\s*,\s*(\d{1,2})\s+([a-zåäö]+)\s*$",
     re.IGNORECASE,
 )
 
-# Ex: "13:45 Space Cadet 1 tim 26 min Barntillåten ..."
-_ITEM_RE = re.compile(r"^\s*(?P<hh>\d{1,2}):(?P<mm>\d{2})\s+(?P<rest>.+?)\s*$")
+# "13:45 ..."
+_TIME_PREFIX_RE = re.compile(r"^\s*(\d{1,2}):(\d{2})\b")
 
-# För att klippa bort metadata efter titel.
-_TITLE_CUTOFF_RE = re.compile(r"\s+\d+\s+tim\b|\s+\d+\s+min\b", re.IGNORECASE)
+# Salong 1 / Lusoperan
+_VENUE_RE = re.compile(r"\b(Salong\s*\d+|Lusoperan)\b", re.IGNORECASE)
+
+# Klipp bort filmlängd och allt efter ("1 tim 26 min", "0 tim 42 min")
+_LENGTH_RE = re.compile(r"\s*\d+\s+tim(?:\s+\d+\s+min)?", re.IGNORECASE)
+
+# Specialvisningar som ofta står i titeln efter " - "
+_SPECIAL_KEYWORDS = (
+    "barnvagnsbio", "seniorbio", "frukostbio", "regibesök", "regissörsbesök",
+    "specialvisning", "premiärvisning", "förhandsvisning", "tillgänglig bio",
+    "med samtal", "och samtal", "skådespelarbesök", "engelsk undertext",
+    "english subtitles", "svenskt tal", "engelskt tal", "klassiker",
+    "aspen classics", "kulturnatten", "livepodd", "medverkandebesök",
+    "tarantino", "äitienpäivä",
+)
 
 
 @dataclass(frozen=True)
-class AspenShow:
-    title: str
+class _Item:
     start_time: str
-    date: str
+    title: str
+    venue: Optional[str]
+    format_info: Optional[str]
     booking_url: Optional[str]
 
 
-def _http_get(url: str, timeout: int) -> str:
-    r = requests.get(
-        url,
-        headers={
-            "User-Agent": USER_AGENT,
-            "Accept-Language": "sv-SE,sv;q=0.9,en;q=0.7",
-        },
-        timeout=timeout,
-    )
-    r.raise_for_status()
-    return r.text
-
-
-def _coerce_target_date(target_date: str | date | None) -> date:
+def _coerce_date(target_date: str | date | None) -> date:
     if target_date is None:
         return datetime.now(STOCKHOLM_TZ).date()
     if isinstance(target_date, date):
         return target_date
-    # main.py skickar ISO-sträng "YYYY-MM-DD"
     return date.fromisoformat(target_date)
 
 
-def _parse_heading_to_date(heading_text: str, anchor: date) -> Optional[date]:
-    """
-    Aspen visar inte år. Vi gissar år relativt ankaret (target_date).
-    """
-    m = _DATE_HEADING_RE.match((heading_text or "").strip())
+def _heading_to_date(text: str, anchor: date) -> Optional[date]:
+    m = _DATE_HEADING_RE.match((text or "").strip())
     if not m:
         return None
-
     day = int(m.group(2))
-    month_name = m.group(3).lower()
-    month = _MONTHS.get(month_name)
+    month = _MONTHS.get(m.group(3).lower())
     if not month:
         return None
-
     y = anchor.year
     d = date(y, month, day)
-
-    # Heuristik runt årsskifte relativt ankaret.
     if anchor.month == 12 and month == 1 and d < anchor:
         d = date(y + 1, month, day)
     if anchor.month == 1 and month == 12 and d > anchor:
         d = date(y - 1, month, day)
-
     return d
-
-
-def _extract_title(rest: str) -> str:
-    rest = (rest or "").strip()
-    m = _TITLE_CUTOFF_RE.search(rest)
-    if not m:
-        return rest
-    return rest[: m.start()].strip()
-
-
-def _iter_relevant_tags_in_order(soup: BeautifulSoup) -> Iterable[Tag]:
-    """
-    Iterera DOM i ordning och yielda rubriker + länkar.
-    Mer tolerant än hårda CSS-selektorer.
-    """
-    root = soup.body or soup
-    for el in root.descendants:
-        if not isinstance(el, Tag):
-            continue
-        if el.name in ("h2", "h3"):
-            yield el
-        elif el.name == "a" and el.get("href"):
-            yield el
 
 
 def _abs_url(href: str) -> str:
@@ -136,6 +93,94 @@ def _abs_url(href: str) -> str:
     return BASE_HOST + "/" + href.lstrip("/")
 
 
+def _extract_specials(title: str) -> tuple[str, list[str]]:
+    """Plocka ut specialvisningar ur titeln.
+
+    'En Poet - specialvisning med poesi och livemusik!' → ('En Poet', ['specialvisning med poesi och livemusik'])
+    'Father Mother Sister Brother - Barnvagnsbio' → ('Father Mother Sister Brother', ['Barnvagnsbio'])
+    """
+    extras: list[str] = []
+    parts = title.split(" - ")
+    if len(parts) < 2:
+        return title.strip(), extras
+
+    base = parts[0].strip()
+    suffixes = [p.strip().rstrip("!").strip() for p in parts[1:]]
+
+    # Behåll bara suffix som ser ut som specialvisningar
+    for s in suffixes:
+        s_low = s.lower()
+        if any(kw in s_low for kw in _SPECIAL_KEYWORDS):
+            extras.append(s)
+        else:
+            # Okänt suffix — behåll i titeln
+            base = base + " - " + s
+    return base.strip(), extras
+
+
+def _parse_link(a_tag: Tag) -> Optional[_Item]:
+    """Tolka en <a>-tagg som motsvarar en visning på Aspen-sidan."""
+    text = a_tag.get_text("\n", strip=True)
+    if not text:
+        return None
+
+    # Första raden ska vara tiden
+    m = _TIME_PREFIX_RE.match(text)
+    if not m:
+        return None
+    start_time = f"{int(m.group(1)):02d}:{m.group(2)}"
+
+    # Plocka ut salong från hela texten
+    venue_match = _VENUE_RE.search(text)
+    venue: Optional[str] = None
+    if venue_match:
+        v = venue_match.group(1)
+        # Normalisera "Salong 1" / "Lusoperan"
+        if v.lower().startswith("salong"):
+            venue = "Salong " + re.search(r"\d+", v).group(0)
+        else:
+            venue = "Lusoperan"
+
+    # Titel: rad efter tiden, före "X tim Y min"
+    # Splitta upp i rader, hoppa över första (tiden) och leta titeln
+    lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
+    title = ""
+    for line in lines[1:]:
+        # Hoppa över "X tim Y min", åldersgränser, ljudformat, språk, salong
+        if _LENGTH_RE.search(line):
+            break
+        if line.lower().startswith(("ljud", "tal ", "text ", "från ", "barntillåten", "salong", "lusoperan", "inga undertext")):
+            continue
+        if not title:
+            title = line
+
+    if not title:
+        return None
+
+    # Plocka ut specialvisningar ur titeln
+    title, specials = _extract_specials(title)
+    format_info = ", ".join(specials) if specials else None
+
+    booking_url = _abs_url(a_tag.get("href", "")) or None
+
+    return _Item(
+        start_time=start_time,
+        title=title,
+        venue=venue,
+        format_info=format_info,
+        booking_url=booking_url,
+    )
+
+
+def _iter_relevant(soup: BeautifulSoup) -> Iterable[Tag]:
+    root = soup.body or soup
+    for el in root.descendants:
+        if isinstance(el, Tag) and el.name in ("h2", "h3", "a"):
+            if el.name == "a" and not el.get("href"):
+                continue
+            yield el
+
+
 def fetch_bioaspen(
     *,
     target_date: str | date | None = None,
@@ -143,13 +188,7 @@ def fetch_bioaspen(
     max_pages: int = 6,
     **_kwargs,
 ) -> list[dict]:
-    """
-    Kompatibel med main.py:
-      - tar emot target_date som ISO-sträng eller date
-      - tar emot timeout
-      - returnerar dictar som matchar Show i main.py
-    """
-    td = _coerce_target_date(target_date)
+    td = _coerce_date(target_date)
     td_iso = td.isoformat()
 
     results: list[dict] = []
@@ -157,69 +196,53 @@ def fetch_bioaspen(
 
     for page in range(1, max_pages + 1):
         url = BASE_URL if page == 1 else f"{BASE_URL}page/{page}/"
-        html = _http_get(url, timeout=timeout)
+        try:
+            html = get_html(url, timeout=timeout)
+        except Exception:
+            break
         soup = BeautifulSoup(html, "html.parser")
 
         current_date: Optional[date] = None
         saw_any_heading = False
-        saw_any_items_for_target = False
+        saw_any_for_target = False
 
-        for tag in _iter_relevant_tags_in_order(soup):
+        for tag in _iter_relevant(soup):
             if tag.name in ("h2", "h3"):
-                d = _parse_heading_to_date(tag.get_text(" ", strip=True), anchor=td)
+                d = _heading_to_date(tag.get_text(" ", strip=True), anchor=td)
                 if d:
                     current_date = d
                     saw_any_heading = True
                 continue
 
-            if tag.name == "a" and current_date is not None:
-                # Vi bryr oss bara om target_date
-                if current_date != td:
-                    continue
+            if current_date != td:
+                continue
 
-                text = tag.get_text(" ", strip=True)
-                m = _ITEM_RE.match(text)
-                if not m:
-                    continue
+            item = _parse_link(tag)
+            if not item:
+                continue
 
-                hh = int(m.group("hh"))
-                mm = int(m.group("mm"))
-                start_time = f"{hh:02d}:{mm:02d}"
+            key = (td_iso, item.start_time, item.title.lower())
+            if key in seen:
+                continue
+            seen.add(key)
 
-                rest = m.group("rest").strip()
-                title = _extract_title(rest)
-                booking_url = _abs_url(tag.get("href", "")) or None
+            results.append({
+                "title": item.title,
+                "cinema": "Bio Aspen",
+                "start_time": item.start_time,
+                "date": td_iso,
+                "booking_url": item.booking_url,
+                "format_info": item.format_info,
+                "district": "Aspudden",
+                "venue": item.venue,
+                "source": "bioaspen.se",
+                "category": "film",
+            })
+            saw_any_for_target = True
 
-                # Dedup
-                key = (td_iso, start_time, title, booking_url or "")
-                if key in seen:
-                    continue
-                seen.add(key)
-
-                results.append(
-                    {
-                        "title": title,
-                        "cinema": "Bio Aspen",
-                        "start_time": start_time,
-                        "date": td_iso,
-                        "booking_url": booking_url,
-                        "format_info": None,
-                        "district": "Aspudden",
-                        "venue": None,
-                        "source": "bioaspen.se",
-                        "category": "film",
-                    }
-                )
-                saw_any_items_for_target = True
-
-        # Om markup/paginering tog slut
         if not saw_any_heading:
             break
-
-        # Om vi hittade visningar för target_date på den här sidan så kan det ändå finnas fler på nästa,
-        # så vi fortsätter. Men om vi inte hittade några alls för target_date och vi är förbi första sidan,
-        # kan vi bryta tidigare för att spara tid.
-        if page > 1 and not saw_any_items_for_target:
+        if page > 1 and not saw_any_for_target:
             break
 
     return results
