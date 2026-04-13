@@ -399,9 +399,9 @@ a:hover { text-decoration: underline; }
 .show-venue { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
 .show-format { color: var(--gold); font-size: 11px; margin-left: 6px; }
 .show-runtime {
-  color: rgba(201, 168, 76, 0.5);
+  color: var(--text-dim);
   font-size: 11px;
-  margin-left: 6px;
+  margin-top: 2px;
   font-weight: 500;
 }
 .show-link {

@@ -339,7 +339,7 @@
       var startMin = timeToMin(s.start_time);
       var endMin = (startMin + runtime + 10) % 1440;
       var endTime = minToTime(endMin);
-      runtimeHtml = ' <span class="show-runtime">' + runtime + ' min (klar ca ' + endTime + ')</span>';
+      runtimeHtml = '<div class="show-runtime">' + runtime + ' min · klar ca ' + endTime + '</div>';
     }
 
     var link = s.booking_url
@@ -350,8 +350,9 @@
       '<div class="show-item">' +
       '<span class="show-time">' + escHtml(s.start_time) + "</span>" +
       '<div class="show-info">' +
-      '<div class="show-title">' + escHtml(s.title) + fmt + runtimeHtml + "</div>" +
+      '<div class="show-title">' + escHtml(s.title) + fmt + "</div>" +
       '<div class="show-venue">' + escHtml(s.cinema) + venueHtml + "</div>" +
+      runtimeHtml +
       "</div>" + link + "</div>"
     );
   }
