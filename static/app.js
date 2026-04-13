@@ -320,15 +320,27 @@
   // ── RESULTS ──
   function renderShowItem(s) {
     var fmt = s.format_info ? '<span class="show-format">' + escHtml(s.format_info) + "</span>" : "";
+
+    // Filmlängd + beräknad sluttid (start + längd + 10 min reklam)
+    var runtime = RUNTIMES[s.title];
+    var runtimeHtml = "";
+    if (runtime) {
+      var startMin = timeToMin(s.start_time);
+      var endMin = (startMin + runtime + 10) % 1440;
+      var endTime = minToTime(endMin);
+      runtimeHtml = ' <span class="show-runtime">' + runtime + ' min (klar ca ' + endTime + ')</span>';
+    }
+
     var link = s.booking_url
       ? '<a href="' + escHtml(s.booking_url) + '" class="show-link" target="_blank" rel="noopener">Boka</a>'
       : "";
+    var venueHtml = s.venue ? " \u00b7 " + escHtml(s.venue) : "";
     return (
       '<div class="show-item">' +
       '<span class="show-time">' + escHtml(s.start_time) + "</span>" +
       '<div class="show-info">' +
-      '<div class="show-title">' + escHtml(s.title) + fmt + "</div>" +
-      '<div class="show-venue">' + escHtml(s.cinema) + (s.venue ? " \u00b7 " + escHtml(s.venue) : "") + "</div>" +
+      '<div class="show-title">' + escHtml(s.title) + fmt + runtimeHtml + "</div>" +
+      '<div class="show-venue">' + escHtml(s.cinema) + venueHtml + "</div>" +
       "</div>" + link + "</div>"
     );
   }

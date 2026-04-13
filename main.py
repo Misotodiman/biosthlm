@@ -254,6 +254,154 @@ def normalize_shows(shows: list[Show]) -> list[Show]:
     return shows
 
 
+# ── FORMAT/VENUE CLEANUP ─────────────────────────────────────────────
+#
+# Mål: städa upp format_info och venue så att irrelevant skräp tas bort
+# (ljudformat, syntolkning, dubblerade salongnamn, pris, etc.) men
+# behåll meningsfull info (IMAX, VIP, sv tal, specialvisningar).
+
+# Saker som ska BORT från format_info helt
+_FMT_DROP_EXACT = {
+    # Ljudformat
+    "5.1", "7.1", "dolby", "dolby atmos", "atmos", "laser",
+    # Tillgänglighet
+    "syntolkning via app", "syntolkning", "uppläst text",
+    # Filmstaden-skräp
+    "familj", "isense", "biopasset 5", "biopasset",
+    "xl - vår största duk", "xl",
+    # Bristol-skräp
+    "vf",
+    # Zita-skräp
+    "array",
+    # Generella språknamn (vi behåller "sv tal" / "eng tal" istället)
+    "svenska", "svenska (dubbat)", "engelska",
+}
+
+# Det här SKA behållas (whitelist för att vara extra säker)
+_FMT_KEEP_PATTERNS = (
+    "imax", "vip", "3d", "70mm", "35mm",
+    "sv tal", "eng tal", "sv. tal", "eng. tal", "sve tal",
+    "rigoletto",  # Filmstaden Rigoletto är en specialsalong
+    # Specialvisningar
+    "barnvagnsbio", "frukostbio", "bakisbio", "hundbio",
+    "members only", "förhandsvisning", "smygpremiär",
+    "family time", "rendez-vous", "med besök", "slutsåld",
+    "stickbio", "filmstudion", "knattebio", "påsklovsbio",
+    "seniorbio", "skolvisning", "skolbio",
+    "regissörsbesök", "skådespelarbesök", "premiär",
+    "autismvänlig", "afternoon tea", "unga cinemateket",
+)
+
+
+def _is_salong(token: str) -> bool:
+    """Kolla om en token är ett salongnamn (Salong N, Salong N VIP,
+    IMAX®-salongen (Salong 1), VIP-salong, etc.)"""
+    t = token.strip().lower()
+    if t.startswith("salong"):
+        return True
+    if "salongen" in t and "(" in t:  # IMAX®-salongen (Salong 1)
+        return True
+    if t == "vip-salong":
+        return False  # behåll detta som format-info, salongen står ändå i venue
+    return False
+
+
+def _should_drop(token: str) -> bool:
+    """Avgör om en format-token ska kastas bort."""
+    t = token.strip().lower()
+    if not t:
+        return True
+
+    # Salongnamn ska bort (de finns redan i venue)
+    if _is_salong(t):
+        return True
+
+    # Exakta matchningar
+    if t in _FMT_DROP_EXACT:
+        return True
+
+    # Pris: "90 kr", "120 kronor"
+    if re.match(r"^\d+\s*(kr|kronor|:-)\s*$", t):
+        return True
+
+    # Filmlängd ska bort härifrån (vi använder TMDB:s data istället)
+    if re.match(r"^\d+\s*(min|minuter)\s*$", t):
+        return True
+
+    # Datum-mönster ("onsdag 15 april", "15 april kl 19.30")
+    if re.match(r"^[a-zåäö]+\s+\d{1,2}\s+[a-zåäö]+", t):
+        return True
+
+    # "återkommande evenemang", "se alla one event", "(see all)"
+    if "återkommande" in t or "one event" in t or "see all" in t:
+        return True
+
+    return False
+
+
+def _looks_meaningful(token: str) -> bool:
+    """Behåll bara format-tokens som är vettiga för användaren."""
+    t = token.strip().lower()
+    if not t:
+        return False
+    if _should_drop(t):
+        return False
+    # Whitelist-check
+    for pattern in _FMT_KEEP_PATTERNS:
+        if pattern in t:
+            return True
+    # Okänd token: behåll bara om den är kort och inte ser ut som skräp
+    if len(t) <= 30 and not any(c in t for c in ("|", ";", "@", "{")):
+        return True
+    return False
+
+
+def clean_format_info(shows: list[Show]) -> None:
+    """Städa upp format_info-fältet för alla visningar."""
+    for s in shows:
+        # 1. Cinema-fältet: ta bort dubblering "Bio Rio · Bio Rio" → "Bio Rio"
+        if s.cinema:
+            parts = [p.strip() for p in re.split(r"[·|]", s.cinema)]
+            unique_parts = []
+            for p in parts:
+                if p and p not in unique_parts:
+                    unique_parts.append(p)
+            s.cinema = " · ".join(unique_parts)
+
+        # 2. Venue-fältet: om det är samma som cinema, sätt till None
+        if s.venue and s.cinema and s.venue.strip().lower() == s.cinema.strip().lower():
+            s.venue = None
+
+        # 3. Format_info: dela upp på · | , och rensa
+        if not s.format_info:
+            continue
+
+        raw = s.format_info
+        # Splitta på vanliga separatorer
+        tokens = re.split(r"\s*[·|]\s*|,\s+", raw)
+
+        kept = []
+        seen = set()
+        for tok in tokens:
+            tok = tok.strip(" ·-")
+            if not tok:
+                continue
+            key = tok.lower()
+            if key in seen:
+                continue
+            if not _looks_meaningful(tok):
+                continue
+            seen.add(key)
+            # Normalisera vanliga varianter
+            if key in ("sv tal", "sve tal", "sv. tal"):
+                tok = "sv tal"
+            elif key in ("eng tal", "eng. tal"):
+                tok = "eng tal"
+            kept.append(tok)
+
+        s.format_info = ", ".join(kept) if kept else None
+
+
 # ── TMDB POSTER LOOKUP ───────────────────────────────────────────────
 
 TMDB_IMG_BASE = "https://image.tmdb.org/t/p/"
@@ -513,6 +661,9 @@ def main():
 
     # Normalisera titlar: flytta format/språk/event till format_info
     normalize_shows(all_shows)
+
+    # Städa format_info, ta bort dubblerade biografnamn, etc.
+    clean_format_info(all_shows)
 
     # Hämta affischer och filmlängder från TMDB
     posters, runtimes = fetch_posters(all_shows)
