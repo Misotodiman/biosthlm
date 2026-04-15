@@ -2,7 +2,7 @@ name: Bygg biosthlm
 
 on:
   schedule:
-    - cron: '17 4 * * *'  # 04:17 UTC = 05:17 svensk vintertid / 06:17 sommartid
+    - cron: '17 0 * * *'  # 00:17 UTC = 01:17 svensk vintertid / 02:17 sommartid
   workflow_dispatch:      # tillåter manuell körning från GitHub-sajten
 
 permissions:
