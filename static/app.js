@@ -144,16 +144,16 @@
       '<button class="quick-btn" id="btn-c-none">Rensa</button>';
 
     document.getElementById("btn-c-inner").addEventListener("click", function () {
-      selectedCinemas = new Set(inner); saveCinemas(); renderCinemas(); renderResults();
+      selectedCinemas = new Set(inner); saveCinemas(); renderCinemas(); renderFilms(); renderResults();
     });
     document.getElementById("btn-c-cineville").addEventListener("click", function () {
-      selectedCinemas = new Set(cineville); saveCinemas(); renderCinemas(); renderResults();
+      selectedCinemas = new Set(cineville); saveCinemas(); renderCinemas(); renderFilms(); renderResults();
     });
     document.getElementById("btn-c-all").addEventListener("click", function () {
-      selectedCinemas = new Set(allCinemas); saveCinemas(); renderCinemas(); renderResults();
+      selectedCinemas = new Set(allCinemas); saveCinemas(); renderCinemas(); renderFilms(); renderResults();
     });
     document.getElementById("btn-c-none").addEventListener("click", function () {
-      selectedCinemas.clear(); saveCinemas(); renderCinemas(); renderResults();
+      selectedCinemas.clear(); saveCinemas(); renderCinemas(); renderFilms(); renderResults();
     });
 
     // Grid
@@ -168,7 +168,7 @@
         var c = chip.dataset.cinema;
         if (selectedCinemas.has(c)) selectedCinemas.delete(c);
         else selectedCinemas.add(c);
-        saveCinemas(); renderCinemas(); renderResults();
+        saveCinemas(); renderCinemas(); renderFilms(); renderResults();
       });
     });
 
@@ -180,12 +180,23 @@
   // ── FILMS ──
   function renderFilms() {
     var search = (document.getElementById("film-search").value || "").toLowerCase();
+    var today = todayIso();
+    var now = nowMinutes();
+    var hasCinemaFilter = selectedCinemas.size > 0;
 
-    // Collect unique films across all selected days
+    // Collect unique films that match current day + time + cinema filters
     var films = {};
     var daysToCheck = selectedDays.size ? selectedDays : new Set(DATES);
     SHOWS.forEach(function (s) {
       if (!daysToCheck.has(s.date)) return;
+      // Hide past shows for today
+      if (s.date === today && timeToMin(s.start_time) < now) return;
+      // Time range
+      var m = timeToMin(s.start_time);
+      if (m < timeMin || m > timeMax) return;
+      // Cinema filter
+      if (hasCinemaFilter && !selectedCinemas.has(s.cinema)) return;
+
       if (!films[s.title]) films[s.title] = { title: s.title, count: 0 };
       films[s.title].count++;
     });
@@ -193,6 +204,15 @@
     var sorted = Object.values(films).sort(function (a, b) {
       return a.title.localeCompare(b.title, "sv");
     });
+
+    // Rensa bort valda filmer som inte längre matchar filtren
+    if (selectedFilms.size) {
+      var available = new Set(sorted.map(function (f) { return f.title; }));
+      selectedFilms.forEach(function (f) {
+        if (!available.has(f)) selectedFilms.delete(f);
+      });
+    }
+
     if (search) {
       sorted = sorted.filter(function (f) {
         return f.title.toLowerCase().indexOf(search) !== -1;
@@ -309,6 +329,7 @@
       timeMin = lo;
       timeMax = hi;
       updateFill();
+      renderFilms();
       renderResults();
     }
 
