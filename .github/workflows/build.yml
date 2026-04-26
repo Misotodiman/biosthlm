@@ -2,13 +2,14 @@ name: Bygg biosthlm
 
 on:
   schedule:
-    - cron: '17 0 * * *'  # 00:17 UTC = 01:17 svensk vintertid / 02:17 sommartid
+    - cron: '17 4 * * *'  # 04:17 UTC = 06:17 sommartid / 05:17 vintertid
   workflow_dispatch:      # tillåter manuell körning från GitHub-sajten
 
 permissions:
   contents: write
   pages: write
   id-token: write
+  issues: write
 
 jobs:
   build:
@@ -32,7 +33,34 @@ jobs:
       - name: Kör skriptet
         env:
           TMDB_API_TOKEN: ${{ secrets.TMDB_API_TOKEN }}
-        run: python main.py --days 5 --include-filmstaden --no-history
+        run: python main.py --days 5 --include-filmstaden --no-history 2>&1 | tee build.log
+
+      - name: Kolla efter scraper-fel
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Plocka ut alla [FEL]-rader
+          ERRORS=$(grep '^\[FEL\]' build.log || true)
+          if [ -z "$ERRORS" ]; then
+            echo "Inga scraper-fel idag."
+            exit 0
+          fi
+
+          # Bygg issue-titel med dagens datum
+          TODAY=$(date -u +%Y-%m-%d)
+          TITLE="Scraper-fel $TODAY"
+
+          # Kolla om det redan finns en öppen issue med samma titel
+          EXISTING=$(gh issue list --state open --search "$TITLE" --json number --jq '.[0].number' || true)
+          if [ -n "$EXISTING" ]; then
+            echo "Issue #$EXISTING finns redan, hoppar över."
+            exit 0
+          fi
+
+          # Skapa issue
+          BODY="Följande scrapers hade fel vid körningen $TODAY:"$'\n\n'"$ERRORS"$'\n\n'"Se [Actions-loggen](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) för detaljer."
+          gh issue create --title "$TITLE" --body "$BODY"
 
       - name: Förbered Pages-mapp
         run: |
