@@ -613,12 +613,58 @@ def render_html(shows: list[Show], dates: list[str], output_path: Path,
     output_path.write_text(html, encoding="utf-8")
 
 
+# ── SCRAPER HISTORY (FALLBACK-CACHE) ────────────────────────────────
+#
+# Mål: om en scraper failar (eller returnerar 0 visningar trots att den
+# brukar ha data) → använd förra körningens data så biografen inte
+# försvinner från sajten helt.
+#
+# Format för output/scraper_history.json:
+#   {
+#     "Cinemateket Stockholm": {
+#       "last_success": "2026-04-27",
+#       "shows": [ {...}, {...} ]      # alla rader scrapern returnerade
+#     },
+#     ...
+#   }
+#
+# Workflow:n committar tillbaka filen efter varje lyckad körning.
+
+# Tröskel: hur många visningar krävs för att räkna "0 nu" som silent failure?
+# Lugna veckor (Tellus, Reflexen) kan ha äkta noll-veckor. Detta kalibreras
+# mot historisk data: om förra körningen hade < 3 visningar → vi vet inte
+# om "tomt" är fel. Om den hade ≥ 3 → 0 nu = troligen scraper-fel.
+SILENT_FAILURE_THRESHOLD = 3
+
+
+def load_scraper_history(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def save_scraper_history(path: Path, history: dict) -> None:
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps(history, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except Exception as e:
+        print(f"[VARNING] Kunde inte spara scraper-historik: {e}", file=sys.stderr)
+
+
 def main():
     args = parse_args()
     dates = list(iter_dates(args.start_date, args.days))
 
-    all_shows: list[Show] = []
-    errors: list[str] = []
+    outdir = Path(__file__).parent / "output"
+    index_out = outdir / "biosthlm.html"
+    history_path = outdir / "scraper_history.json"
+    history = load_scraper_history(history_path)
 
     sources = [
         ("Bio Fågel Blå", fetch_biofagelbla),
@@ -634,31 +680,109 @@ def main():
         ("Reflexen", fetch_reflexen),
     ]
 
+    # Spåra per scraper: rader som hämtats och fel som uppstått
+    session_rows: dict[str, list[dict]] = {label: [] for label, _ in sources}
+    session_errors: dict[str, list[str]] = {label: [] for label, _ in sources}
+    if args.include_filmstaden:
+        session_rows["Filmstaden"] = []
+        session_errors["Filmstaden"] = []
+
+    # Hämta data per datum × scraper
     for d in dates:
         print(f"=== {d} ===")
 
         for label, fn in sources:
             try:
                 rows = fn(target_date=d, timeout=args.timeout)
-                all_shows.extend(Show(**r) for r in rows)
+                session_rows[label].extend(rows)
                 print(f"[OK] {label}: {len(rows)} visningar")
             except Exception as e:
-                msg = f"{label} {d}: {e}"
-                errors.append(msg)
-                print(f"[FEL] {msg}", file=sys.stderr)
+                session_errors[label].append(f"{d}: {e}")
+                print(f"[FEL] {label} {d}: {e}", file=sys.stderr)
 
         if args.include_filmstaden:
             try:
                 rows = fetch_filmstaden_stockholm_stub(target_date=d, timeout=args.timeout)
-                all_shows.extend(Show(**r) for r in rows)
+                session_rows["Filmstaden"].extend(rows)
                 print(f"[OK] Filmstaden Stockholm (stub): {len(rows)} visningar")
             except Exception as e:
-                msg = f"Filmstaden {d}: {e}"
-                errors.append(msg)
-                print(f"[FEL] {msg}", file=sys.stderr)
+                session_errors["Filmstaden"].append(f"{d}: {e}")
+                print(f"[FEL] Filmstaden {d}: {e}", file=sys.stderr)
 
-    outdir = Path(__file__).parent / "output"
-    index_out = outdir / "biosthlm.html"
+    # Konsolidera per scraper: använd ny data, fallback eller flagga som tomt
+    today_iso = today_stockholm().isoformat()
+    all_shows: list[Show] = []
+    errors: list[str] = []
+
+    for label in list(session_rows.keys()):
+        rows = session_rows[label]
+        errs = session_errors[label]
+        prev = history.get(label, {})
+        prev_shows = prev.get("shows", [])
+        prev_date = prev.get("last_success", "")
+
+        if rows:
+            # Fick data — använd den och uppdatera historiken
+            all_shows.extend(Show(**r) for r in rows)
+            history[label] = {"last_success": today_iso, "shows": rows}
+
+            if errs:
+                # Partiellt fel: lyckades vissa dagar, failade andra
+                errors.append(
+                    f"{label}: nätverksfel för {len(errs)} av {len(dates)} dagar "
+                    f"(senaste: {errs[-1]})"
+                )
+        else:
+            # Inga rader. Tre fall: krasch, silent failure, eller äkta tomt.
+            future_prev = [
+                r for r in prev_shows if r.get("date", "") >= today_iso
+            ]
+
+            if errs:
+                # Allt failade med exception
+                if future_prev:
+                    all_shows.extend(Show(**r) for r in future_prev)
+                    errors.append(
+                        f"{label}: alla {len(dates)} dagar failade — "
+                        f"visar cachad data från {prev_date} "
+                        f"({len(future_prev)} visningar)"
+                    )
+                    print(
+                        f"[FALLBACK] {label}: {len(future_prev)} cachade visningar "
+                        f"från {prev_date}"
+                    )
+                else:
+                    errors.append(
+                        f"{label}: alla {len(dates)} dagar failade "
+                        f"({errs[-1]}) — ingen cachad data tillgänglig"
+                    )
+            elif len(prev_shows) >= SILENT_FAILURE_THRESHOLD:
+                # Ingen krasch men 0 visningar trots att vi tidigare hade data
+                # → troligen att sajten ändrat HTML eller att scrapern är trasig
+                if future_prev:
+                    all_shows.extend(Show(**r) for r in future_prev)
+                    errors.append(
+                        f"{label}: 0 visningar trots tidigare {len(prev_shows)} "
+                        f"visningar — visar cachad data från {prev_date}"
+                    )
+                    print(
+                        f"[TOMT] {label}: silent failure — använder fallback "
+                        f"({len(future_prev)} visningar från {prev_date})",
+                        file=sys.stderr,
+                    )
+                else:
+                    errors.append(
+                        f"{label}: 0 visningar och cachad data är för gammal"
+                    )
+                    print(
+                        f"[TOMT] {label}: silent failure och cache är slut",
+                        file=sys.stderr,
+                    )
+            else:
+                # Aldrig haft mycket data — kan vara normalt (lugn vecka)
+                print(f"[INFO] {label}: 0 visningar (ingen historik att jämföra med)")
+
+    save_scraper_history(history_path, history)
 
     # Normalisera titlar: flytta format/språk/event till format_info
     normalize_shows(all_shows)
