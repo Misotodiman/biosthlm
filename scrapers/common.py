@@ -11,7 +11,10 @@ DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "Accept-Language": "sv-SE,sv;q=0.9,en;q=0.8",
-    "Accept-Encoding": "gzip, deflate, br",
+    # OBS: INGEN Brotli ("br") här. requests/urllib3 stöder bara gzip+deflate
+    # out-of-the-box. Om vi annonserar "br" och servern komprimerar med Brotli
+    # får BeautifulSoup binär smörja → scrapers returnerar 0 visningar.
+    "Accept-Encoding": "gzip, deflate",
     "Connection": "keep-alive",
     "Cache-Control": "no-cache",
     "Pragma": "no-cache",
