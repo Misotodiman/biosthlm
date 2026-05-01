@@ -64,14 +64,28 @@
       String(d.getDate()).padStart(2, "0");
   }
 
-  // Returnerar bara de datum från DATES som är idag eller senare.
-  // Backend hämtar 6 dagar som buffert (eftersom Actions kör nyckfullt sent
-  // ibland), men frontenden visar bara dagar som inte är passé.
-  // Vid midnatt triggas en omrendering så gårdagens dag försvinner automatiskt
-  // även om någon haft sajten öppen i bakgrunden.
+  // Returnerar de datum från DATES som ska visas:
+  // - Backend hämtar 6 dagar som buffert (eftersom Actions kör nyckfullt sent)
+  // - Vi visar max 5 dagar för att hålla layouten konsekvent
+  // - Vi slänger "idag" om alla visningar redan passerat (= fredag kl 23:00
+  //   ska inte visa "Fre 0" eftersom alla visningar redan har börjat)
+  // - Vid midnatt triggas en omrendering så gårdagens dag försvinner och
+  //   en framtida dag dyker upp ur bufferten
   function visibleDates() {
     var today = todayIso();
-    return DATES.filter(function (d) { return d >= today; });
+    var now = nowMinutes();
+
+    var future = DATES.filter(function (d) {
+      if (d < today) return false;
+      if (d > today) return true;
+      // d === today: visa bara om det finns minst en visning kvar idag
+      return SHOWS.some(function (s) {
+        return s.date === today && timeToMin(s.start_time) >= now;
+      });
+    });
+
+    // Cappa till max 5 dagar — bufferten ska inte synas förrän vi behöver den
+    return future.slice(0, 5);
   }
 
   function nowMinutes() {
