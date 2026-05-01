@@ -17,10 +17,6 @@ jobs:
     steps:
       - name: Checka ut koden
         uses: actions/checkout@v4
-        with:
-          # Behövs för att kunna pusha tillbaka scraper-cache
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
 
       - name: Installera Python
         uses: actions/setup-python@v5
@@ -37,35 +33,15 @@ jobs:
       - name: Kör skriptet
         env:
           TMDB_API_TOKEN: ${{ secrets.TMDB_API_TOKEN }}
-        run: python main.py --days 5 --include-filmstaden --no-history 2>&1 | tee build.log
-
-      - name: Commita scraper-cache tillbaka
-        if: always()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Lägg till bara cache-filerna (inte HTML-output etc.)
-          # `|| true` så att stegget inte failar om filerna saknas
-          git add output/scraper_history.json output/poster_cache.json 2>/dev/null || true
-
-          if git diff --staged --quiet 2>/dev/null; then
-            echo "Inga ändringar i scraper-cache."
-          else
-            # [skip ci] förhindrar att committen triggar en ny workflow-körning
-            git commit -m "Uppdatera scraper-cache [skip ci]"
-            git push
-          fi
+        run: python main.py --days 6 --include-filmstaden --no-history 2>&1 | tee build.log
 
       - name: Kolla efter scraper-fel
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # Plocka ut alla [FEL]- och [TOMT]-rader
-          # [FEL]  = scraper kastade exception (timeout, parse-fel)
-          # [TOMT] = scraper returnerade 0 visningar trots tidigare data (silent failure)
-          ERRORS=$(grep -E '^\[(FEL|TOMT)\]' build.log || true)
+          # Plocka ut alla [FEL]-rader
+          ERRORS=$(grep '^\[FEL\]' build.log || true)
           if [ -z "$ERRORS" ]; then
             echo "Inga scraper-fel idag."
             exit 0
@@ -82,24 +58,8 @@ jobs:
             exit 0
           fi
 
-          # Bygg body med både [FEL] och [TOMT] ihopgrupperade
-          FEL_LINES=$(grep '^\[FEL\]' build.log || true)
-          TOMT_LINES=$(grep '^\[TOMT\]' build.log || true)
-
-          BODY="Scraper-problem vid körningen $TODAY:"$'\n\n'
-
-          if [ -n "$FEL_LINES" ]; then
-            BODY="${BODY}### Krascher (exceptions)"$'\n\n'"\`\`\`"$'\n'"${FEL_LINES}"$'\n'"\`\`\`"$'\n\n'
-          fi
-
-          if [ -n "$TOMT_LINES" ]; then
-            BODY="${BODY}### Silent failures (0 visningar)"$'\n\n'"\`\`\`"$'\n'"${TOMT_LINES}"$'\n'"\`\`\`"$'\n\n'
-            BODY="${BODY}_Silent failure betyder att scrapern körde utan att krascha men returnerade 0 visningar trots att den tidigare hade data. Troligen har sajten ändrat HTML-struktur._"$'\n\n'
-          fi
-
-          BODY="${BODY}Se [Actions-loggen](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) för detaljer."
-
           # Skapa issue
+          BODY="Följande scrapers hade fel vid körningen $TODAY:"$'\n\n'"$ERRORS"$'\n\n'"Se [Actions-loggen](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) för detaljer."
           gh issue create --title "$TITLE" --body "$BODY"
 
       - name: Förbered Pages-mapp

@@ -35,7 +35,8 @@
   // ── STATE ──
   var selectedCinemas = new Set();
   var selectedFilms = new Set();
-  var selectedDays = new Set(DATES);
+  // selectedDays initieras i init() efter visibleDates() är definierad
+  var selectedDays = new Set();
   var timeMin = 360;   // 06:00
   var timeMax = 1440;  // 24:00
 
@@ -61,6 +62,16 @@
     return d.getFullYear() + "-" +
       String(d.getMonth() + 1).padStart(2, "0") + "-" +
       String(d.getDate()).padStart(2, "0");
+  }
+
+  // Returnerar bara de datum från DATES som är idag eller senare.
+  // Backend hämtar 6 dagar som buffert (eftersom Actions kör nyckfullt sent
+  // ibland), men frontenden visar bara dagar som inte är passé.
+  // Vid midnatt triggas en omrendering så gårdagens dag försvinner automatiskt
+  // även om någon haft sajten öppen i bakgrunden.
+  function visibleDates() {
+    var today = todayIso();
+    return DATES.filter(function (d) { return d >= today; });
   }
 
   function nowMinutes() {
@@ -186,7 +197,7 @@
 
     // Collect unique films that match current day + time + cinema filters
     var films = {};
-    var daysToCheck = selectedDays.size ? selectedDays : new Set(DATES);
+    var daysToCheck = selectedDays.size ? selectedDays : new Set(visibleDates());
     SHOWS.forEach(function (s) {
       if (!daysToCheck.has(s.date)) return;
       // Hide past shows for today
@@ -278,7 +289,7 @@
     var strip = document.getElementById("day-strip");
     var today = todayIso();
     var now = nowMinutes();
-    strip.innerHTML = DATES.map(function (d) {
+    strip.innerHTML = visibleDates().map(function (d) {
       var count = SHOWS.filter(function (s) {
         if (s.date !== d) return false;
         if (d === today && timeToMin(s.start_time) < now) return false;
@@ -295,7 +306,7 @@
         if (selectedDays.has(day)) {
           selectedDays.delete(day);
           // Don't allow zero days — reselect if last was removed
-          if (selectedDays.size === 0) selectedDays = new Set(DATES);
+          if (selectedDays.size === 0) selectedDays = new Set(visibleDates());
         } else {
           selectedDays.add(day);
         }
@@ -411,7 +422,41 @@
   // ── FILM SEARCH ──
   document.getElementById("film-search").addEventListener("input", renderFilms);
 
+  // ── MIDNATTS-TIMER ──
+  // Vid midnatt: rensa bort gårdagens dag från selectedDays och rendera om allt.
+  // Det gör att om någon har sajten öppen i bakgrunden över en dag, så
+  // försvinner gårdagens dag-pill automatiskt utan att de behöver ladda om.
+  function scheduleMidnightRefresh() {
+    var now = new Date();
+    var nextMidnight = new Date(
+      now.getFullYear(), now.getMonth(), now.getDate() + 1,
+      0, 0, 5  // 5 sekunder efter midnatt för att undvika race med datum-rollover
+    );
+    var msUntilMidnight = nextMidnight.getTime() - now.getTime();
+
+    setTimeout(function () {
+      // Rensa bort dagar som inte längre är synliga (gårdagens datum osv)
+      var visible = new Set(visibleDates());
+      selectedDays.forEach(function (d) {
+        if (!visible.has(d)) selectedDays.delete(d);
+      });
+      // Om allt rensats bort, välj alla synliga som default
+      if (selectedDays.size === 0) selectedDays = new Set(visibleDates());
+
+      // Rendera om allt så dagstrip + visningar uppdateras
+      renderDays();
+      renderFilms();
+      renderResults();
+
+      // Schemalägg nästa midnatt
+      scheduleMidnightRefresh();
+    }, msUntilMidnight);
+  }
+
   // ── INIT ──
+  // Initiera selectedDays till alla synliga dagar (idag + framåt)
+  selectedDays = new Set(visibleDates());
+
   setupPanel("toggle-cinemas", "panel-cinemas");
   setupPanel("toggle-films", "panel-films");
 
@@ -421,4 +466,5 @@
   renderDays();
   setupTimeSlider();
   renderResults();
+  scheduleMidnightRefresh();
 })();
