@@ -636,6 +636,12 @@ def render_html(shows: list[Show], dates: list[str], output_path: Path,
 # om "tomt" är fel. Om den hade ≥ 3 → 0 nu = troligen scraper-fel.
 SILENT_FAILURE_THRESHOLD = 3
 
+# Cinemateket Stockholm är stängt över sommaren (maj–juli) och har inget
+# program då. Vi skippar scrapern helt under dessa månader så den inte
+# genererar falska "0 visningar"-varningar. Den slås på igen automatiskt
+# 1 augusti. Justera SOMMARSTANGT_MANADER om säsongen ändras.
+CINEMATEKET_SOMMARSTANGT_MANADER = {5, 6, 7}
+
 
 def load_scraper_history(path: Path) -> dict:
     if not path.exists():
@@ -679,6 +685,12 @@ def main():
         ("Bio Bristol", fetch_biobristol),
         ("Reflexen", fetch_reflexen),
     ]
+
+    # Skippa Cinemateket helt under sommarstängningen (maj–juli).
+    # Då slipper vi falska "0 visningar"-varningar varje dag.
+    if today_stockholm().month in CINEMATEKET_SOMMARSTANGT_MANADER:
+        sources = [s for s in sources if s[0] != "Cinemateket Stockholm"]
+        print("[INFO] Cinemateket Stockholm skippas (sommarstängt maj–juli)")
 
     # Spåra per scraper: rader som hämtats och fel som uppstått
     session_rows: dict[str, list[dict]] = {label: [] for label, _ in sources}
