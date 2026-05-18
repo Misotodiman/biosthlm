@@ -5,104 +5,93 @@ import re
 from datetime import date, datetime
 from typing import Any
 
-import requests
 from bs4 import BeautifulSoup
 
+from .common import get_html
+
 BASE_URL = "https://www.biobristol.se"
-# URL-mönster: /program/today/popularity/all  eller  /program/YYYY-MM-DD/popularity/all
-PROGRAM_URL = f"{BASE_URL}/program/{{date_part}}/popularity/all"
+# Filmgrail-plattformen. URL-mönster (OBS: TVÅ /all — screen + ageRating):
+#   /program/{datum}/popularity/all/all?noMaster=true
+# noMaster=true ger en ren HTML-fragment utan sidhuvud/sidfot.
+# {datum} är "today" eller "YYYY-MM-DD".
+PROGRAM_URL = BASE_URL + "/program/{date_part}/popularity/all/all?noMaster=true"
+
+# Ljudformat och tekniska taggar vi INTE vill ha med i format_info.
+# clean_format_info i main.py rensar mycket av detta ändå, men vi filtrerar
+# bort det uppenbara redan här så datan blir renare.
+_SKIP_NOTES = re.compile(
+    r"^(picture format|5\.1|7\.1|2\.0|dolby|atmos|vf|of)\b",
+    flags=re.I,
+)
 
 
-def _fetch_html(url: str, timeout: int) -> str:
-    headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; bio-schema-stockholm/1.0; +https://example.invalid)",
-        "Accept": "text/html,application/xhtml+xml",
-        "Accept-Language": "sv-SE,sv;q=0.9,en;q=0.8",
+def _parse_showtime(st_link, title: str, target_date: str) -> dict[str, Any] | None:
+    """Parsar en enskild <a class="showtime-wrap"> till en visningsrad."""
+    # Bokningslänk: href är /showtime/{id}
+    href = st_link.get("href", "")
+    booking_url = BASE_URL + href if href.startswith("/") else href
+
+    # Klockslag
+    time_el = st_link.select_one(".program__showtimeTime")
+    if not time_el:
+        return None
+    tm = re.search(r"(\d{1,2}:\d{2})", time_el.get_text(" ", strip=True))
+    if not tm:
+        return None
+    start_time = tm.group(1)
+
+    # Salong: "Bristol" eller "Sal 1" — ligger i showtimeProvider
+    venue = None
+    prov_el = st_link.select_one(".program__showtimeProvider")
+    if prov_el:
+        v = prov_el.get_text(" ", strip=True)
+        if v:
+            venue = v
+
+    # Taggar: "svensk text", "5.1", "picture format: vf" osv.
+    # Vi behåller språk-/textinfo men hoppar över rena ljud-/teknik-taggar.
+    notes = []
+    for note_el in st_link.select(".program__showtimeNotes"):
+        note = note_el.get_text(" ", strip=True)
+        if note and not _SKIP_NOTES.match(note):
+            notes.append(note)
+    format_info = " · ".join(notes) if notes else None
+
+    return {
+        "title": title,
+        "cinema": "Bio Bristol",
+        "start_time": start_time,
+        "date": target_date,
+        "booking_url": booking_url,
+        "format_info": format_info,
+        "venue": venue,
+        "district": None,
+        "source": "biobristol.se",
+        "category": "film",
     }
-    r = requests.get(url, headers=headers, timeout=timeout)
-    r.raise_for_status()
-    return r.text
 
 
-def _parse_showings(html: str, wanted: date) -> list[dict[str, Any]]:
-    """
-    Parsar visningar från Bio Bristols server-renderade HTML.
-
-    Strukturen per film:
-      - <a> med filmtitel (länk till /f/slug/id)
-      - Metadata-text med ålder, längd, genre
-      - <a> med visning: "Bristol HH:MM format-info" (länk till /showtime/id)
-    """
+def _parse_program(html: str, target_date: str) -> list[dict[str, Any]]:
+    """Parsar alla visningar ur Bio Bristols program-fragment."""
     soup = BeautifulSoup(html, "html.parser")
     rows: list[dict[str, Any]] = []
 
-    # Hitta alla showtime-länkar (de pekar på /showtime/...)
-    showtime_links = soup.find_all("a", href=re.compile(r"/showtime/"))
-
-    for st_link in showtime_links:
-        st_text = " ".join(st_link.get_text(" ", strip=True).split())
-        booking_url = st_link.get("href", "")
-        if booking_url.startswith("/"):
-            booking_url = BASE_URL + booking_url
-
-        # Extrahera tid: "Bristol 16:30 svensk text" → tid = "16:30"
-        time_match = re.search(r"(\d{1,2}:\d{2})", st_text)
-        if not time_match:
+    # Varje film är en .movie-card med titel + visningar
+    for card in soup.select("div.movie-card"):
+        title_el = card.select_one("a.movie-title")
+        if not title_el:
             continue
-        start_time = time_match.group(1)
-
-        # Venue (allt före tiden)
-        venue_part = st_text[: time_match.start()].strip()
-        venue = venue_part if venue_part else "Bristol"
-
-        # Format-info (allt efter tiden)
-        format_part = st_text[time_match.end():].strip()
-        format_info = format_part if format_part else None
-
-        # Hitta filmtitel: gå bakåt och leta efter närmaste <a> med /f/ länk
-        title = None
-        film_url = None
-        # Sök i föregående element
-        for prev in st_link.find_all_previous("a", href=re.compile(r"/f/")):
-            title_text = " ".join(prev.get_text(" ", strip=True).split())
-            if title_text and not title_text.startswith("http"):
-                title = title_text
-                film_url = prev.get("href", "")
-                if film_url.startswith("/"):
-                    film_url = BASE_URL + film_url
-                break
-
+        title = title_el.get_text(" ", strip=True)
         if not title:
             continue
 
-        # Hämta metadata (ålder, längd, genre) — text mellan filmtiteln och showtimen
-        meta_info = None
-        parent = st_link.parent
-        if parent:
-            parent_text = " ".join(parent.get_text(" ", strip=True).split())
-            # Leta efter mönster som "Från 7 år | 1t 54m | Drama"
-            meta_match = re.search(
-                r"((?:Från\s+)?\d+\s*år.*?)(?:Bristol|Sal\s)", parent_text
-            )
-            if meta_match:
-                meta_info = meta_match.group(1).strip().rstrip("|").strip()
+        # Alla visningar inom detta filmkort
+        for st_link in card.select("a.showtime-wrap"):
+            row = _parse_showtime(st_link, title, target_date)
+            if row:
+                rows.append(row)
 
-        rows.append(
-            {
-                "title": title,
-                "cinema": "Bio Bristol",
-                "start_time": start_time,
-                "date": wanted.isoformat(),
-                "booking_url": booking_url,
-                "format_info": format_info,
-                "venue": venue or "Bristol",
-                "district": None,
-                "source": "biobristol.se",
-                "category": "film",
-            }
-        )
-
-    # Dedup
+    # Dedup på (datum, tid, titel, salong)
     seen = set()
     uniq: list[dict[str, Any]] = []
     for r in rows:
@@ -111,24 +100,25 @@ def _parse_showings(html: str, wanted: date) -> list[dict[str, Any]]:
             continue
         seen.add(k)
         uniq.append(r)
-    return uniq
+
+    return sorted(uniq, key=lambda x: (x["start_time"], x["title"].lower()))
 
 
 def fetch_biobristol(target_date: str, timeout: int = 20) -> list[dict[str, Any]]:
     """
     Hämtar visningar för ett specifikt datum från Bio Bristol.
 
-    Sajten (Filmgrail-plattform) server-renderar HTML, så vi
-    hämtar /program/{datum}/popularity/all och parsar.
+    Bio Bristol kör Filmgrail-plattformen. Programmet hämtas som ett
+    HTML-fragment via /program/{datum}/popularity/all/all?noMaster=true.
+
+    OBS: Bristol publicerar tider för kommande helg t.o.m. torsdag
+    vanligtvis först onsdag morgon — så framtida datum kan ge 0 träffar
+    helt korrekt (inte ett scraper-fel).
     """
     wanted = date.fromisoformat(target_date)
     today = datetime.now().date()
-
-    if wanted == today:
-        date_part = "today"
-    else:
-        date_part = wanted.isoformat()
+    date_part = "today" if wanted == today else wanted.isoformat()
 
     url = PROGRAM_URL.format(date_part=date_part)
-    html = _fetch_html(url, timeout=timeout)
-    return _parse_showings(html, wanted)
+    html = get_html(url, timeout=timeout)
+    return _parse_program(html, target_date)
